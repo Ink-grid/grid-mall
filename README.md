@@ -14,7 +14,8 @@ centro comercial online para mayoristas
    ###### children: `Es el componente hijo que va a embolver el badge`
 
 ##### ejemplo
-`import Badge from '../component/badge'
+```
+  import Badge from '../component/badge'
   const ComponentExample = () => {
     return (
         <View>
@@ -24,6 +25,6 @@ centro comercial online para mayoristas
         </View>
     )
   }
-  `
+  ```
 
 
