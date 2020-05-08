@@ -1,36 +1,44 @@
 /** @format */
 
 import * as React from 'react';
-import { View } from 'native-base';
-import { Image, Text, StyleSheet, ImageBackground } from 'react-native';
+//import { View } from 'native-base';
+import {
+	View,
+	Text,
+	StyleSheet,
+	ImageBackground,
+	TouchableOpacity
+} from 'react-native';
 
 interface PaperImageProps {
 	description?: string;
+	onPress?: () => void;
 	title: string;
 	uri: string;
 	vertical?: boolean;
 }
 
 const PaperImage: React.SFC<PaperImageProps> = props => {
-	const { description, title, uri, vertical } = props;
-
+	const { description, title, uri, vertical, onPress } = props;
 	return (
-		<View
-			style={
-				vertical
-					? { width: '100%', marginRight: 10, height: 150 }
-					: styles.headerImage
-			}>
-			<ImageBackground
-				source={{ uri: uri }}
-				imageStyle={{ borderRadius: 10 }}
-				style={styles.image}>
-				<View style={styles.background}>
-					<Text style={styles.text}>{title.toUpperCase()}</Text>
-					<Text style={styles.description}>{description}</Text>
-				</View>
-			</ImageBackground>
-		</View>
+		<TouchableOpacity onPress={onPress}>
+			<View
+				style={
+					vertical
+						? { width: '100%', marginRight: 10, height: 150 }
+						: styles.headerImage
+				}>
+				<ImageBackground
+					source={{ uri: uri }}
+					imageStyle={{ borderRadius: 10 }}
+					style={styles.image}>
+					<View style={styles.background}>
+						<Text style={styles.text}>{title.toUpperCase()}</Text>
+						<Text style={styles.description}>{description}</Text>
+					</View>
+				</ImageBackground>
+			</View>
+		</TouchableOpacity>
 	);
 };
 
@@ -65,11 +73,11 @@ const styles = StyleSheet.create({
 		fontSize: 10
 	},
 	headerImage: {
-		width: 150,
+		width: 122.5,
 		backgroundColor: 'red',
 		borderRadius: 10,
 		//width: 200,
-		height: 150
+		height: 100
 	}
 });
 

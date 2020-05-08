@@ -4,6 +4,7 @@ import React, { createContext, useReducer, useEffect } from 'react';
 import { reducer, State, initialState, types } from './Reducer';
 import { useActions } from './Action';
 import { AsyncStorage } from 'react-native';
+// import useDidUpdate from '../components/useDidUpdate';
 
 interface IContextProps {
 	state: State;
@@ -38,9 +39,20 @@ const StoreProvider: React.SFC<StoreProviderProps> = props => {
 		actions.resToreToken(userToken!);
 	};
 
+	const getPedidoInitial = async () => {
+		let pedidos: any = null;
+		try {
+			pedidos = await AsyncStorage.getItem('products');
+		} catch (error) {
+			console.log('gett product error: ', error);
+		}
+		actions.setProducts(JSON.parse(pedidos));
+	};
+
 	// Log new state
 	useEffect(() => {
 		getTokenAsync();
+		getPedidoInitial();
 		console.log({ newState: state });
 	}, []);
 

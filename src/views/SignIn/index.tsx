@@ -179,17 +179,27 @@ const SignIn: React.SFC<SignInProps> = props => {
 		<>
 			{isTransparent && (
 				<View style={{ height: 210 }}>
-					<ImageBackground
+					{/* <ImageBackground
 						style={{ flex: 1 }}
 						imageStyle={{ resizeMode: 'cover' }}
 						source={{
 							uri:
 								'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSz4rBtZgK-nf5HRSfmLXJ8jR1q5tswb9238qqJLr0vmGqVJneV&usqp=CAU'
-						}}>
-						<View style={styles.background}>
-							<Text style={styles.text}>inkmarket</Text>
-						</View>
-					</ImageBackground>
+						}}> */}
+					<View style={styles.background}>
+						<Text style={{ fontSize: 40, fontWeight: 'bold' }}>Grid</Text>
+						<Text
+							style={{
+								fontSize: 50,
+								marginLeft: 30,
+								marginTop: -35,
+								color: '#75F075',
+								fontWeight: 'bold'
+							}}>
+							mall
+						</Text>
+					</View>
+					{/* </ImageBackground> */}
 				</View>
 			)}
 			<Container style={styles.root}>
@@ -203,16 +213,19 @@ const SignIn: React.SFC<SignInProps> = props => {
 						style={{
 							height: 400,
 							marginBottom: 30,
+							alignItems: 'center',
 							justifyContent: 'flex-end'
 						}}>
+						<Text style={{ fontSize: 30, fontWeight: 'bold' }}>Grid</Text>
 						<Text
 							style={{
-								fontWeight: 'bold',
 								fontSize: 40,
-								color: 'black',
-								textAlign: 'center'
+								marginLeft: 23,
+								marginTop: -30,
+								color: '#75F075',
+								fontWeight: 'bold'
 							}}>
-							inkmarket
+							mall
 						</Text>
 					</View>
 				)}
@@ -257,7 +270,7 @@ const SignIn: React.SFC<SignInProps> = props => {
 					<View style={{ padding: 10 }}>
 						<Button
 							block
-							style={{ backgroundColor: '#495FA5' }}
+							style={{ backgroundColor: '#75F075' }}
 							disabled={isLoading ? true : false}
 							onPress={SignInAsync}>
 							<Text>Inicair sesion</Text>
@@ -306,10 +319,10 @@ const styles = StyleSheet.create({
 		padding: 10
 	},
 	background: {
-		backgroundColor: 'rgba(0, 0, 0, 0.5)',
+		backgroundColor: '#fff',
 		flex: 1,
 		width: '100%',
-		justifyContent: 'center',
+		justifyContent: 'flex-end',
 		alignItems: 'center'
 	},
 	spinner: {

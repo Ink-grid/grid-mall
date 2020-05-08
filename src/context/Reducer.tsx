@@ -3,7 +3,8 @@ enum types {
 	SET_USER = 'SET_USER',
 	SIGN_IN = 'SIGN_IN',
 	RESTORE_TOKEN = 'RESTORE_TOKEN',
-	SIGN_OUT = 'SIGN_OUT'
+	SIGN_OUT = 'SIGN_OUT',
+	SET_PRODUCTS = 'SET_PRODUCTS'
 }
 
 type State = {
@@ -11,13 +12,15 @@ type State = {
 	isLoading: boolean;
 	isSignout: boolean;
 	userToken: string | null;
+	produts: any;
 };
 
 let initialState: any = {
 	user: null,
 	isLoading: true,
 	isSignout: false,
-	userToken: false
+	userToken: false,
+	produts: null
 };
 
 const reducer = (state: State, action: any) => {
@@ -49,6 +52,12 @@ const reducer = (state: State, action: any) => {
 				...state,
 				isSignout: true,
 				userToken: null
+			};
+
+		case types.SET_PRODUCTS:
+			return {
+				...state,
+				produts: action.payload
 			};
 		default:
 			throw new Error('Unexpected action');

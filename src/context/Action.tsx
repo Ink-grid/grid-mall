@@ -15,6 +15,10 @@ export const useActions = (state: any, dispatch: any) => {
 		dispatch({ type: types.SIGN_IN, payload: token });
 	};
 
+	const setProducts = (products: any) => {
+		dispatch({ type: types.SET_PRODUCTS, payload: products });
+	};
+
 	const signOut = () => {
 		dispatch({ type: types.SIGN_OUT });
 	};
@@ -23,6 +27,7 @@ export const useActions = (state: any, dispatch: any) => {
 		setUser,
 		resToreToken,
 		signOut,
-		signIn
+		signIn,
+		setProducts
 	};
 };

@@ -11,6 +11,8 @@ import Error from '../Error';
 
 export interface CategoryProps {
 	navigation?: any;
+	title?: boolean;
+	flexContainer?: any;
 }
 
 interface categoryItems {
@@ -31,7 +33,7 @@ const query = gql`
 `;
 
 const Category: React.SFC<CategoryProps> = props => {
-	const { navigation } = props;
+	const { navigation, flexContainer, title = true } = props;
 	const { loading, error, data, refetch } = useQuery(query);
 	const [newData, setNewData] = React.useState<Array<categoryItems>>([]);
 	const [refreshing, setRefreshing] = React.useState(false);
@@ -49,24 +51,23 @@ const Category: React.SFC<CategoryProps> = props => {
 		}
 	}, [data]);
 
-	console.log(error);
-
 	return (
-		<View style={styles.container}>
-			<Text style={styles.text}>Compra libre: </Text>
+		<View style={flexContainer ? flexContainer : styles.container}>
+			{title && <Text style={styles.text}>Compra libre: </Text>}
 			{error && <Error onPress={() => refetch()} title='categoria' />}
 			{!loading && !error ? (
 				<FlatList
 					style={{ padding: 5 }}
-					// refreshControl={
-					// 	<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-					// }
+					refreshControl={
+						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+					}
 					key='recomendation'
 					ItemSeparatorComponent={() => <View style={{ height: 10 }}></View>}
 					data={newData}
 					keyExtractor={(item, index) => index.toString()}
 					renderItem={({ item, index }) => (
 						<PaperImage
+							onPress={() => navigation.jumpTo('detailOrders', item)}
 							uri={item && item.uri}
 							vertical={true}
 							title={item.title}

@@ -104,7 +104,13 @@ const CardComponent: React.SFC<CardComponentProps> = props => {
 						<Icon name='eye' style={{ color: '#1A2130' }} />
 						<Text>100</Text>
 					</View>
-					<Button onPress={() => navigation.jumpTo('RecomenDesc', cardItems)}>
+					<Button
+						onPress={() =>
+							navigation.navigate('Screens', {
+								screen: 'RecomenDesc',
+								params: cardItems
+							})
+						}>
 						<Text>comprar</Text>
 					</Button>
 					<Text>S/. 200.00</Text>

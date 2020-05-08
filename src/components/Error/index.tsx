@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
 		width: '80%',
 		textAlign: 'center',
 		fontSize: 15,
-		color: '#fff'
+		color: 'black'
 	}
 });
 

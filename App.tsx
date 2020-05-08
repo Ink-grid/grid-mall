@@ -3,22 +3,32 @@
 import React from 'react';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
-import { Ionicons } from '@expo/vector-icons';
 import { HttpLink } from 'apollo-link-http';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { onError } from 'apollo-link-error';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { StoreProvider } from './src/context/StoreContext';
 import Route from './src/route';
 
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+	if (graphQLErrors)
+		graphQLErrors.forEach(({ message, locations, path }) =>
+			console.log(
+				`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+			)
+		);
+	if (networkError) console.log(`[Network error]: ${networkError}`);
+});
+
 const link = new HttpLink({
-	uri: `http://192.168.43.33:4000/graphql/inkmarket`
+	uri: `https://cryptic-refuge-32742.herokuapp.com/graphql/inkmarket`
 });
 
 const cache = new InMemoryCache();
 
 const client = new ApolloClient({
-	link,
+	link: HttpLink.from([errorLink, link]),
 	cache
 });
 

@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 10
 	},
 	text: {
-		color: '#fff',
+		color: 'black',
 		fontSize: 15,
 		padding: 10,
 		fontWeight: 'bold'
