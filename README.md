@@ -15,7 +15,6 @@ centro comercial online para mayoristas
 
 ##### ejemplo
 `import Badge from '../component/badge'
-  
   const ComponentExample = () => {
     return (
         <View>
@@ -24,6 +23,7 @@ centro comercial online para mayoristas
         </Badge>
         </View>
     )
-  }`
+  }
+  `
 
 
