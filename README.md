@@ -14,12 +14,13 @@ centro comercial online para mayoristas
    ###### children: `Es el componente hijo que va a embolver el badge`
 
 ##### ejemplo
-```
+```tsx
   import Badge from '../component/badge'
   const ComponentExample = () => {
     return (
         <View>
           <Badge count={12}>
+          //children component
           <Cart/>
         </Badge>
         </View>
