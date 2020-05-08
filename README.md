@@ -14,7 +14,7 @@ centro comercial online para mayoristas
    ###### children: `Es el componente hijo que va a embolver el badge`
 
 ##### ejemplo
-tsx
+tsx `
   import Badge from '../component/badge'
   
   const ComponentExample = () => {
@@ -26,6 +26,6 @@ tsx
         </View>
     )
   }
-  
+  `
 
 
