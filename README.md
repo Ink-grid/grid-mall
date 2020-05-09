@@ -27,7 +27,7 @@ centro comercial online para mayoristas
     )
   }
   ```  
-###CustomList
+### CustomList
  
  `Este componente permite realizar consultas hacia el backend verificando el error y la respuesta en el servidor.`
     
@@ -72,7 +72,7 @@ centro comercial online para mayoristas
           renderIten: {(data) => (
                 // data.title, es dependiendo de la consulta que se realiza devolvera los datos, este ejemplo solo es refrencial
                 // para debugear podrias hacer un console log a data eje. console.log(data)
-                <Text>data.title</Text>
+                <Text>{data.title}</Text>
           )}
           />
         </View>
