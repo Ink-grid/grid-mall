@@ -31,15 +31,15 @@ centro comercial online para mayoristas
  
  `Este componente permite realizar consultas hacia el backend verificando el error y la respuesta en el servidor.`
     
-     #### props (props? = el parametro es opcional)
+   #### props (props? = el parametro es opcional)
      
-     ###### query: `es la consulta que se va a relizar`.
-     ###### renderInten: `es una funcion donde va a rendreizar la data obtenidad de la consulta`
-     ###### resolve: `es un parametro establecido de grapql que nos permite resolver la consulta`
-     ###### isError?: `retorna un booleano si ocurrio un error en la consulta, por defecto es false`     
-     ###### resolveDeleted?: `es un parametro establecido de grapql que nos permite resolver la consulta`
-     ###### deletedAction?: `esta funcion nos permite eliminar un items de la conulta`
-     ###### variables?: `este parametro nos permite configurar las variables necesarias para la consulta` 
+   ###### query: `es la consulta que se va a relizar`.
+   ###### renderInten: `es una funcion donde va a rendreizar la data obtenidad de la consulta`
+   ###### resolve: `es un parametro establecido de grapql que nos permite resolver la consulta`
+   ###### isError?: `retorna un booleano si ocurrio un error en la consulta, por defecto es false`     
+   ###### resolveDeleted?: `es un parametro establecido de grapql que nos permite resolver la consulta`
+   ###### deletedAction?: `esta funcion nos permite eliminar un items de la conulta`
+   ###### variables?: `este parametro nos permite configurar las variables necesarias para la consulta` 
      
     
    ##### ejemplo
