@@ -10,8 +10,8 @@ centro comercial online para mayoristas
   
    ####  props
    
-   ###### count: `Este parametro permite establecer el numero de conteo en el componente`
-   ###### children: `Es el componente hijo que va a embolver el badge`
+   ###### count(number): `Este parametro permite establecer el numero de conteo en el componente`
+   ###### children(ReactChild): `Es el componente hijo que va a embolver el badge`
 
 ##### ejemplo
 ```tsx
@@ -25,6 +25,8 @@ centro comercial online para mayoristas
           </Badge>
         </View>
     )
+   
+    export default Badge
   }
   ```  
 ### CustomList
@@ -33,13 +35,13 @@ centro comercial online para mayoristas
     
    #### props (props? = el parametro es opcional)
      
-   ###### query: `es la consulta que se va a relizar`.
-   ###### renderInten: `es una funcion donde va a rendreizar la data obtenidad de la consulta`
-   ###### resolve: `es un parametro establecido de grapql que nos permite resolver la consulta`
-   ###### isError?: `retorna un booleano si ocurrio un error en la consulta, por defecto es false`     
-   ###### resolveDeleted?: `es un parametro establecido de grapql que nos permite resolver la consulta`
-   ###### deletedAction?: `esta funcion nos permite eliminar un items de la conulta`
-   ###### variables?: `este parametro nos permite configurar las variables necesarias para la consulta` 
+   ###### query(promesa): `es la consulta que se va a relizar`.
+   ###### renderInten((item, deleteAction?) => ReactChild): `es una funcion donde va a rendreizar la data obtenidad de la consulta`
+   ###### resolve(string): `es un parametro establecido de grapql que nos permite resolver la consulta`
+   ###### isError?(boolean): `retorna un booleano si ocurrio un error en la consulta, por defecto es false`     
+   ###### resolveDeleted?(string): `es un parametro establecido de grapql que nos permite resolver la consulta`
+   ###### deletedAction?((value) => promise): `esta funcion nos permite eliminar un items de la conulta`
+   ###### variables?(any{}): `este parametro nos permite configurar las variables necesarias para la consulta` 
      
     
    ##### ejemplo
@@ -78,9 +80,61 @@ centro comercial online para mayoristas
         </View>
     )
   }
+  
+  export default 
   ``` 
+  
+ ### Modal (ModalComponent)
+ 
+ 	`EL siguiente componente nos permite generar un modal personalizado.`
+
+#### prosp (props? = el parametro es opcional)
+	
+##### isVisible(boolean) `Este parametro recive un boleaano. true es para activarlo y false para ocultarlo`
+##### children(ReactChild) `Este parametro recive un React child, componentes hijos que va a mostrar el modal`
+##### title?(string) `Este parametro determina el titulo del modal`
+##### header?(boolean) `oculta el header por defecto del modal`
+##### position?(position) `determina la posicion del modal @postion = 'flex-start' | 'flex-end' | 'center'`
+##### transparent?(boolean) `determina el background del modal por defecto es false`
+##### style?({}) `determina estilos personalisados al root del modal`
+##### styleConten?({}) `determina stilos personalisados al componente`
+##### styleTitle?({}) `determina el estilo del titulo del modal`
+##### close?(() => void) `recive una funcion para cerrar el modal`
+##### contendwidth?(string) `determina el tamaño del modal en porcentaje solo en anchura ejem: (90%)`
+##### animated?(animated) `determina la animacion del modal @animated = 'slide' | 'fade' | 'none';`
+##### loading?(boolean) `efectivo si tienes un formularion en el modal, por defecto es false`
+
+
+### ejemplo
+
+```tsx	
+  import ModalComponent from '../component/ModalComponent'
+  import { Text, View } from 'native-base';
+  
+   const ComponentExample = () => {
+   
+   // hooks para establecer estados en los componentes
+   const [visible, setVisible] = useState(false)
+   
+    return (
+        <View>
+          <ModalComponent isVisible={Visible} title="hola mundo" close={() => setVisible(false)} >    
+            //children component
+            <ChildrenComponent/>
+          </ModalComponent>
+        </View>
+    )
+    }
+   export default ModalComponent
+  
+```
    
    
+### EJecutar
+
+ ##### npm install
+ ##### npm start
+
           
  
  
