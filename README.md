@@ -131,35 +131,96 @@ const ComponentExample = () => {
 
 ```tsx
 import CustomList from '../component/CustomList'
-import { Text, View } from 'native-base';
+import { Text, View,Card, Button  } from 'native-base';
 import gql from 'graphql-tag';
+import { Alert } from 'react-native';
+import { useMutation } from '@apollo/react-hooks';
 
-// esto es una consulta gradql que requiere una variable
+// esto es una consulta gradql.
 const query = gql`
-query($type: String!) {
-getAccess(type: $type) {
-icon
-typeIcon
-name
-route
-}
-}
+	{
+		categories {
+			_uid
+			title
+			description
+		}
+	}
+`;
+
+// query para eliminar
+
+const DELETED_Cateory = gql`
+	mutation DeletedCategory($uid: String!) {
+		deletedCategory(uid: $uid)
+	}
 `;
 
 const ComponentExample = () => {
+
+	// instacion el hook de apollo client
+	const [deletedCategory] = useMutation(DELETED_Cateory);
+
  return (
      <View>
-       <CustomList
-       query: {query}
-       resolve: 'getAccess' // tendra que resolver getAccess por que es el nombre de la consulta, esta opcion varia.
-       variables: {type: 'proveedor'} // type es la variable que necesita la consulta @type: String! = {type: ""}
-       isError: {(state) => console.log(state)}
-       renderIten: {(data) => (
-             // data.title, es dependiendo de la consulta que se realiza devolvera los datos, este ejemplo solo es refrencial
-             // para debugear podrias hacer un console log a data eje. console.log(data)
-             <Text>{data.title}</Text>
-       )}
-       />
+	   <CustomList
+				query={query}
+				resolve='categories'
+				renderIten={(data: [Category]) => (
+					<View>
+						{data.map((categorie, index) => (
+							<Card key={index}>
+								<Text>{categorie.title}</Text>
+							</Card>
+						))}
+					</View>
+				)}
+			/>
+
+		{/*Eliminar un elemento en especifico*/}
+		<CustomList
+				query={query}
+				resolve='categories'
+				resolveDeleted="deletedCategory"
+				isError={(state, reload) => {
+					state ? reload && reload() : alert('ocurrio un erro');
+				}}
+				deletedAction={(value: any) =>
+					deletedCategory({ variables: { ...value } })
+				}
+				renderIten={(data: [Category], deletedItems) => (
+					<View>
+						{data.map((categorie, index) => (
+							<Card key={index}>
+								<Text>{categorie.title}</Text>
+								<Button onPress={() => {
+										if (deletedItems) {
+											Alert.alert(
+												'Confirmat',
+												'Estas seguro de realizar esta acción',
+												[
+													{
+														text: 'Cancel',
+														onPress: () => console.log('Cancel Pressed'),
+														style: 'cancel'
+													},
+													{
+														text: 'OK',
+														onPress: () => deletedItems({ uid: categorie._uid })
+													}
+												],
+												{ cancelable: false }
+											);
+										}
+									}}
+								>
+									<Text>Eliminar</Text>
+								</Button>
+							</Card>
+						))}
+					</View>
+				)}
+			/>
+
      </View>
  )
 }

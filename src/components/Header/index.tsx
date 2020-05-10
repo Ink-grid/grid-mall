@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Button, Left, Icon, Body, Header, Title, Right } from 'native-base';
+//import { useIsDrawerOpen } from '@react-navigation/drawer';
 import { StyleSheet } from 'react-native';
 
 type RightType = {
@@ -68,7 +69,7 @@ const HeaderComponent: React.SFC<HeaderComponentProps> = props => {
 				return '#FF00FF';
 			case 'purple':
 				return '#800080';
-			// y n colores ...
+			// n colores ...
 			default:
 				return '#ffffff';
 		}
