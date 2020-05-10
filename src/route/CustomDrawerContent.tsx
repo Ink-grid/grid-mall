@@ -94,7 +94,7 @@ const CustomDrawerContent: React.SFC<CustomDrawerContentProps> = props => {
 				{data.getAccess.map((route: any, index: number) => (
 					<DrawerItem
 						key={index}
-						style={{ marginTop: -10 }}
+						style={[index !== 0 ? { marginTop: -10 } : { marginTop: 5 }]}
 						icon={({ size = 26 }) => (
 							<Icon
 								style={{
