@@ -2,7 +2,7 @@
 
 # grid-mall
 
-centro comercial online para mayoristas (commit prueba gridmallfdsfsdf sdf sdfl)
+centro comercial online para mayoristas
 
 ## Componentes
 
