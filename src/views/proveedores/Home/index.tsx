@@ -1,7 +1,8 @@
 /** @format */
 
 import * as React from 'react';
-import { Container, Text } from 'native-base';
+import { Container, Text, Content} from 'native-base';
+import HeaderIcon from './header_home';
 
 export interface HomeProps {
 	navigation: any;
@@ -15,8 +16,14 @@ const Home: React.SFC<HomeProps> = props => {
 	console.log('props home', navigation);
 
 	return (
-		<Container style={{ justifyContent: 'center', alignItems: 'center' }}>
-			<Text>Home</Text>
+
+		<Container >
+			<HeaderIcon></HeaderIcon>
+			<Content padder>
+				<Text>:::::::::::::</Text>
+				<Text >♦Beta ♣ 001 ♦</Text>
+				<Text>=============</Text>
+			</Content>
 		</Container>
 	);
 };
