@@ -285,11 +285,164 @@ const ComponentExample = () => {
 export default ModalComponent;
 ```
 
+### Carousel (Carousel)
+
+`EL siguiente componente nos permite generar un carousel personalizado.`
+
+#### prosp (props? = el parametro es opcional)
+
+##### items([]) `es un array de objetos donde mostrara los itens en el carrousel`
+
+##### style(string) `Este parametro nos permite designar el tipo de stylo a utilizar para el corousel`
+
+##### transparent?(booleam) `Este parametro nos permite detirmar si el carousel es transparente`
+
+##### bulletTheme?(string) `puedes seleccionar entre drak o white`
+
+##### auto?(boolean) `determina si el carousel se ejecuta automaticamente`
+
+##### delay?(number) `determina la velocidad de movimiento del carousel por defecto 30000 mil miliseungos (3 segundos)`
+
+##### bulledPosition?({}) `determina la posicion del bulled ejemplo {bottom: 0 | top: 0 | left: 0}`
+
+### ejemplo
+
+```tsx
+import * as React from 'react';
+import { Container, Text, View, Button, Icon } from 'native-base';
+import Carousel from '../../../components/Carousel';
+export interface ExampleProps {
+	navigation: any;
+}
+
+const Example: React.SFC<ExampleProps> = props => {
+	return (
+		<View>
+			<Carousel
+				style='Slide'
+				auto
+				bulletTheme='white'
+				transparent
+				bulledPosition={{ bottom: 0 }}
+				items={[
+					{
+						component: (
+							<View
+								style={{
+									width: '100%',
+									height: '100%',
+									borderRadius: 8,
+									padding: 10,
+									backgroundColor: '#142215'
+								}}>
+								<Text style={{ color: '#1A751B', fontWeight: 'bold' }}>
+									Aviso importante
+								</Text>
+								<Text style={{ color: '#fff', fontSize: 10, width: '60%' }}>
+									Para grid mall la seguridad es una prioridad. Desde este 16/03
+									y hasta nuevo aviso, las compras diarias no estan perimitidas
+								</Text>
+								<Button
+									transparent
+									style={{ marginTop: '5%' }}
+									onPress={() => alert('hola')}>
+									<Text
+										style={{
+											color: '#fff'
+										}}>
+										Sigue los consejos de salud emitido por el gobierno
+									</Text>
+								</Button>
+							</View>
+						)
+					},
+					{
+						component: (
+							<View
+								style={{
+									width: '100%',
+									height: '100%',
+									borderRadius: 8,
+									padding: 10,
+									backgroundColor: '#362849'
+								}}>
+								<Text
+									style={{
+										paddingLeft: 10,
+										color: '#fff',
+										fontWeight: 'bold',
+										fontSize: 20
+									}}>
+									!Hola!
+								</Text>
+								<Text
+									style={{
+										color: '#fff',
+										fontSize: 13,
+										paddingLeft: 10,
+										width: '60%'
+									}}>
+									Ingresa aquí para ver consejos útiles de como usar la app
+								</Text>
+								<View style={{ paddingLeft: 10 }}>
+									<Button
+										iconRight
+										style={{
+											width: '50%',
+											height: 30,
+											marginTop: 10,
+											backgroundColor: '#1A751B'
+										}}
+										onPress={() => alert('hola')}>
+										<Text
+											style={{
+												textTransform: 'lowercase',
+												color: '#fff'
+											}}>
+											Dale click aqui
+										</Text>
+										<Icon
+											name='arrowright'
+											style={{ color: '#fff' }}
+											type='AntDesign'
+										/>
+									</Button>
+									<View style={{ marginTop: 10 }}>
+										<Text
+											style={{
+												color: '#fff',
+												fontSize: 21,
+												fontWeight: 'bold'
+											}}>
+											Grid
+										</Text>
+										<Text
+											style={{
+												fontWeight: 'bold',
+												color: '#1A751B',
+												fontSize: 30,
+												marginTop: -20
+											}}>
+											mall
+										</Text>
+									</View>
+								</View>
+							</View>
+						)
+					}
+				]}
+			/>
+		</View>
+	);
+};
+
+export default Example;
+```
+
 ### EJecutar
 
 ##### npm install
 
 ##### npm start
-
 
 #### eh modificado este archivo
