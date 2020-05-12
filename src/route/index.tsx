@@ -23,6 +23,7 @@ import {
 	Contracts,
 	Transport
 } from '../views/proveedores';
+import { Platform } from 'react-native';
 
 // import views
 export interface RouteProps {}
@@ -83,7 +84,7 @@ const Route: React.SFC<RouteProps> = () => {
 				<NavigationContainer>
 					<Drawer.Navigator
 						unmountInactiveRoutes={true}
-						drawerType='slide'
+						drawerType={'slide'}
 						overlayColor='transparent'
 						drawerStyle={{ width: '50%', backgroundColor: 'transparent' }}
 						contentContainerStyle={{ flex: 1 }}

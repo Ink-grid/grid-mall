@@ -71,7 +71,7 @@ export interface CustomListProps {
 	) => React.ReactChild;
 	resolve: string;
 	isError?: (state: boolean, reload?: (value?: any) => Promise<any>) => void;
-	resolveDeletd?: string;
+	resolveDeleted?: string;
 	deletedAction?: (value: any) => Promise<any>;
 	variables?: any;
 }
@@ -84,7 +84,7 @@ const CustomList: React.SFC<CustomListProps> = props => {
 		variables,
 		resolve,
 		deletedAction,
-		resolveDeletd,
+		resolveDeleted,
 		isError
 	} = props;
 	const { loading, error, data, refetch } = useQuery(query, {
@@ -97,8 +97,8 @@ const CustomList: React.SFC<CustomListProps> = props => {
 			//const [startMutation] = useMutation(deletedquery);
 			let response = await deletedAction!(value);
 			console.log(response);
-			if (resolveDeletd) {
-				if (response.data[resolveDeletd]) {
+			if (resolveDeleted) {
+				if (response.data[resolveDeleted]) {
 					isError!(false, refetch);
 				} else {
 					isError!(true);

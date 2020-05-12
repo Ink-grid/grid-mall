@@ -18,7 +18,8 @@ import {
 	Keyboard,
 	AsyncStorage,
 	StatusBar,
-	ImageBackground
+	ImageBackground,
+	Platform
 } from 'react-native';
 
 import { StoreContext } from '../../context/StoreContext';
@@ -176,137 +177,154 @@ const SignIn: React.SFC<SignInProps> = props => {
 		}, [])
 	);
 	return (
-		<>
-			{isTransparent && (
-				<View style={{ height: 210 }}>
-					{/* <ImageBackground
-						style={{ flex: 1 }}
+		<View
+			style={[
+				Platform.OS === 'web'
+					? {
+							flexDirection: 'row',
+							flex: 1,
+							backgroundColor: '#fff'
+					  }
+					: { flex: 1 }
+			]}>
+			{Platform.OS === 'web' && (
+				<View style={{ width: '50%', height: '100%' }}>
+					<ImageBackground
+						style={{ flex: 1, height: '100%' }}
 						imageStyle={{ resizeMode: 'cover' }}
 						source={{
 							uri:
 								'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSz4rBtZgK-nf5HRSfmLXJ8jR1q5tswb9238qqJLr0vmGqVJneV&usqp=CAU'
-						}}> */}
-					<View style={styles.background}>
-						<Text style={{ fontSize: 40, fontWeight: 'bold' }}>Grid</Text>
-						<Text
-							style={{
-								fontSize: 50,
-								marginLeft: 30,
-								marginTop: -35,
-								color: '#75F075',
-								fontWeight: 'bold'
-							}}>
-							mall
-						</Text>
-					</View>
-					{/* </ImageBackground> */}
+						}}
+					/>
 				</View>
 			)}
-			<Container style={styles.root}>
-				<StatusBar
-					animated
-					barStyle={isTransparent ? 'dark-content' : 'default'}
-					backgroundColor={isTransparent ? '#fff' : 'transparent'}
-				/>
-				{!isTransparent && (
-					<View
-						style={{
-							height: 400,
-							marginBottom: 30,
-							alignItems: 'center',
-							justifyContent: 'flex-end'
-						}}>
-						<Text style={{ fontSize: 30, fontWeight: 'bold' }}>Grid</Text>
-						<Text
-							style={{
-								fontSize: 40,
-								marginLeft: 23,
-								marginTop: -30,
-								color: '#75F075',
-								fontWeight: 'bold'
-							}}>
-							mall
-						</Text>
+
+			<View style={[Platform.OS === 'web' ? { width: '50%' } : { flex: 1 }]}>
+				{isTransparent && (
+					<View style={{ height: 210 }}>
+						<View style={styles.background}>
+							<Text style={{ fontSize: 40, fontWeight: 'bold' }}>Grid</Text>
+							<Text
+								style={{
+									fontSize: 50,
+									marginLeft: 30,
+									marginTop: -35,
+									color: '#75F075',
+									fontWeight: 'bold'
+								}}>
+								mall
+							</Text>
+						</View>
+						{/* </ImageBackground> */}
 					</View>
 				)}
-				<View>
-					<Form style={{ padding: 10 }}>
-						<Item
-							rounded
-							error={
-								error.type &&
-								error.type === ('invalid-email' || 'wrong-password')
-									? true
-									: false
-							}
-							style={{ marginBottom: 5 }}>
-							<Icon active name='person'></Icon>
-							<Input {...user} placeholder='Usuario' />
-							{error.type &&
-								error.type === ('invalid-email' || 'wrong-password') && (
-									<Icon active name='close-circle' />
-								)}
-						</Item>
-						<Item
-							rounded
-							error={
-								error.type && error.type === ('isMin' || 'wrong-password')
-									? true
-									: false
-							}>
-							<Icon active name='navigate' />
-							<Input
-								secureTextEntry={isSecutiry}
-								{...password}
-								placeholder='Password'
-							/>
-							<Icon
-								active
-								onPress={() => setSecurity(!isSecutiry)}
-								name='eye'
-							/>
-						</Item>
-					</Form>
-					<View style={{ padding: 10 }}>
-						<Button
-							block
-							style={{ backgroundColor: '#75F075' }}
-							disabled={isLoading ? true : false}
-							onPress={SignInAsync}>
-							<Text>Inicair sesion</Text>
-						</Button>
-					</View>
-					<Text note style={{ textAlign: 'center' }}>
-						¿Olvidaste tu contraseña?
-					</Text>
-					<View
-						style={{
-							marginTop: 60
-						}}>
-						<Text note style={{ textAlign: 'center' }}>
-							OR
-						</Text>
-					</View>
-					<View
-						style={{
-							padding: 10,
-							marginTop: 100,
-							alignItems: 'center'
-						}}>
-						<Button onPress={() => navigation.navigate('Register')} success>
-							<Text style={{ textTransform: 'lowercase' }}>
-								Crear cuenta de inkmarket
+				<Container style={styles.root}>
+					<StatusBar
+						animated
+						barStyle={isTransparent ? 'dark-content' : 'default'}
+						backgroundColor={isTransparent ? '#fff' : 'transparent'}
+					/>
+					{!isTransparent && (
+						<View
+							style={{
+								height: 400,
+								marginBottom: 30,
+								alignItems: 'center',
+								justifyContent: 'flex-end'
+							}}>
+							<Text style={{ fontSize: 30, fontWeight: 'bold' }}>Grid</Text>
+							<Text
+								style={{
+									fontSize: 40,
+									marginLeft: 23,
+									marginTop: -30,
+									color: '#75F075',
+									fontWeight: 'bold'
+								}}>
+								mall
 							</Text>
-						</Button>
+						</View>
+					)}
+					<View>
+						<Form style={{ padding: 10 }}>
+							<Item
+								rounded
+								error={
+									error.type &&
+									error.type === ('invalid-email' || 'wrong-password')
+										? true
+										: false
+								}
+								style={{ marginBottom: 5 }}>
+								<Icon active name='person'></Icon>
+								<Input {...user} placeholder='Usuario' />
+								{error.type &&
+									error.type === ('invalid-email' || 'wrong-password') && (
+										<Icon active name='close-circle' />
+									)}
+							</Item>
+							<Item
+								rounded
+								error={
+									error.type && error.type === ('isMin' || 'wrong-password')
+										? true
+										: false
+								}>
+								<Icon active name='navigate' />
+								<Input
+									secureTextEntry={isSecutiry}
+									{...password}
+									placeholder='Password'
+								/>
+								<Icon
+									active
+									onPress={() => setSecurity(!isSecutiry)}
+									name='eye'
+								/>
+							</Item>
+						</Form>
+						<View style={{ padding: 10 }}>
+							<Button
+								block
+								style={{ backgroundColor: '#75F075' }}
+								disabled={isLoading ? true : false}
+								onPress={SignInAsync}>
+								<Text>Inicair sesion</Text>
+							</Button>
+						</View>
+						<Text note style={{ textAlign: 'center' }}>
+							¿Olvidaste tu contraseña?
+						</Text>
+						<View
+							style={{
+								marginTop: 60
+							}}>
+							<Text note style={{ textAlign: 'center' }}>
+								OR
+							</Text>
+						</View>
+						<View
+							style={{
+								padding: 10,
+								marginTop: 100,
+								alignItems: 'center'
+							}}>
+							<Button onPress={() => navigation.navigate('Register')} success>
+								<Text style={{ textTransform: 'lowercase' }}>
+									Crear cuenta de inkmarket
+								</Text>
+							</Button>
+						</View>
 					</View>
-				</View>
-			</Container>
-			{isLoading && (
-				<View style={styles.spinner}>
-					<Spinner color='#1A2138' />
-				</View>
-			)}
-		</>
+				</Container>
+				{isLoading && (
+					<View style={styles.spinner}>
+						<Spinner color='#1A2138' />
+					</View>
+				)}
+			</View>
+		</View>
 	);
 };
 
@@ -316,7 +334,13 @@ const styles = StyleSheet.create({
 		zIndex: 0,
 		alignContent: 'center',
 		justifyContent: 'center',
-		padding: 10
+		padding: 10,
+		...Platform.select({
+			web: {
+				backgroundColor: 'red',
+				width: '80%'
+			}
+		})
 	},
 	background: {
 		backgroundColor: '#fff',
