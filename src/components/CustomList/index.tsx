@@ -99,9 +99,9 @@ const CustomList: React.SFC<CustomListProps> = props => {
 			console.log(response);
 			if (resolveDeleted) {
 				if (response.data[resolveDeleted]) {
-					isError!(false, refetch);
+					isError!(true, refetch);
 				} else {
-					isError!(true);
+					isError!(false);
 				}
 			}
 		} catch (error) {

@@ -24,6 +24,7 @@ import {
 	Transport
 } from '../views/proveedores';
 import { Platform } from 'react-native';
+import Prueba from '../views/proveedores/Prueba';
 
 // import views
 export interface RouteProps {}
@@ -67,6 +68,7 @@ const Route: React.SFC<RouteProps> = () => {
 				<Stacks.Screen name='Contracts' component={Contracts} />
 				<Stacks.Screen name='Transport' component={Transport} />
 				<Stacks.Screen name='Logout' component={Loguot} />
+				<Stacks.Screen name='Prueba' component={Prueba} />
 			</Stacks.Navigator>
 		</Animated.View>
 	);

@@ -114,6 +114,7 @@ const HeaderComponent: React.SFC<HeaderComponentProps> = props => {
 								style={[
 									background === 'white' ? styles.white : { color: '#FFFFFF' }
 								]}
+								type={item.iconType}
 								name={item.iconName}
 							/>
 						</Button>
