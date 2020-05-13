@@ -5,10 +5,11 @@ import { Container, Icon, Button, Text, Item, Label, Input } from 'native-base';
 import { View, StyleSheet, Keyboard, Alert, BackHandler } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/core';
-//import RegisterViews from './components/views';
-import Stepper, { ProgressStep } from '../../components/Stepper';
+// //import RegisterViews from './components/views';
+// import Stepper, { ProgressStep } from '../../components/Stepper';
 // import HomeRegister from './components/Views';
 import RegisterViews from './components/views';
+import HomeRegister from './components/ImageLogo';
 
 export interface RegisterProps {
 	navigation: any;
@@ -89,7 +90,7 @@ const Register: React.SFC<RegisterProps> = props => {
 				</View>
 			) : null}
 
-			{/* {state === 0 && <HomeRegister />} */}
+			{state === 0 && <HomeRegister />}
 
 			{state !== 0 && (
 				<View style={{ flex: 1 }}>
