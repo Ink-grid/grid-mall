@@ -17,6 +17,7 @@ export interface CarouselProps {
 	auto?: boolean;
 	delay?: number;
 	bulledPosition?: any;
+	nextAction?: (next: () => void) => React.ReactChild;
 }
 
 const Carousel: React.SFC<CarouselProps> = props => {
@@ -31,7 +32,8 @@ const Carousel: React.SFC<CarouselProps> = props => {
 		transparent = false,
 		bulledPosition = { top: 0 },
 		auto = false,
-		delay = 3000
+		delay = 3000,
+		nextAction
 	} = props;
 
 	//[*] items perInterval default 1
@@ -76,57 +78,72 @@ const Carousel: React.SFC<CarouselProps> = props => {
 		);
 	}
 
+	// [*] función para especificar a la siguiente vista
+	const stepperPlay = () => {
+		//[*] seteamos el valor del fracionamiento
+		setFraction(prevs =>
+			prevs > width - width / intervals
+				? width / intervals
+				: prevs + width / intervals
+		);
+
+		//[*] generemoas el nuevo intervalo para el steeps
+		setInterval((prevs: any) => (interval === intervals ? 1 : prevs));
+
+		//[*] movemos el scroll a las coordenas correspodiente
+		scroolRef.current.scrollTo({
+			animated: true,
+			y: 0,
+			x: interval === intervals ? 1 : fraction
+		});
+	};
+
 	useInterval(() => {
 		if (auto) {
-			//[*] seteamos el valor del fracionamiento
-			setFraction(prevs =>
-				prevs > width - width / intervals
-					? width / intervals
-					: prevs + width / intervals
-			);
-
-			setInterval((prevs: any) => (interval === intervals ? 1 : prevs));
-			scroolRef.current.scrollTo({
-				animated: true,
-				y: 0,
-				x: interval === intervals ? 1 : fraction
-			});
+			stepperPlay();
 		}
 	}, delay);
 
 	return (
-		<View
-			style={[
-				styles.container,
-				{ backgroundColor: transparent ? 'transparent' : '#fff' }
-			]}>
-			<ScrollView
-				ref={scroolRef}
-				horizontal={true}
-				contentContainerStyle={{
-					...styles.scrollView,
-					width: `${100 * intervals}%`
-				}}
-				showsHorizontalScrollIndicator={false}
-				onContentSizeChange={(w, h) => init(w)}
-				onScroll={data => {
-					setWidth(data.nativeEvent.contentSize.width);
-					setInterval(getInterval(data.nativeEvent.contentOffset.x));
-				}}
-				scrollEventThrottle={200}
-				pagingEnabled
-				decelerationRate='fast'>
-				{items.map((item: any, index: number) => {
-					switch (style) {
-						case 'stats':
-							return <Stat key={index} component={renderItem!(item, index)} />;
-						default:
-							return <Slide key={index} component={item.component} />;
-					}
-				})}
-			</ScrollView>
-			<View style={[styles.bullets, bulledPosition]}>{bullets}</View>
-		</View>
+		<>
+			<View
+				style={[
+					styles.container,
+					{ backgroundColor: transparent ? 'transparent' : '#fff' }
+				]}>
+				<ScrollView
+					ref={scroolRef}
+					horizontal={true}
+					contentContainerStyle={{
+						...styles.scrollView,
+						width: `${100 * intervals}%`
+					}}
+					showsHorizontalScrollIndicator={false}
+					onContentSizeChange={(w, h) => init(w)}
+					onScroll={data => {
+						setWidth(data.nativeEvent.contentSize.width);
+						setInterval(getInterval(data.nativeEvent.contentOffset.x));
+					}}
+					scrollEventThrottle={200}
+					pagingEnabled
+					decelerationRate='fast'>
+					{items.map((item: any, index: number) => {
+						switch (style) {
+							case 'stats':
+								return (
+									<Stat key={index} component={renderItem!(item, index)} />
+								);
+							default:
+								return <Slide key={index} component={item.component} />;
+						}
+					})}
+				</ScrollView>
+				<View style={[styles.bullets, bulledPosition]}>{bullets}</View>
+			</View>
+			{nextAction && (
+				<View style={{ marginTop: 20 }}>{nextAction(stepperPlay)}</View>
+			)}
+		</>
 	);
 };
 

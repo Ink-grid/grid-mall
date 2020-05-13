@@ -27,7 +27,7 @@ type backgroundType =
 	| 'default';
 
 export interface HeaderComponentProps {
-	title: string;
+	title?: string;
 	leftActions?: RightType;
 	rightItems?: Array<RightType>;
 	androidStatusBarColor?: string;

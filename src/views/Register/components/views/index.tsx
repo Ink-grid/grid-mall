@@ -2,9 +2,10 @@
 
 import * as React from 'react';
 import useDidUpdate from '../../../../components/useDidUpdate';
-import { View, StyleSheet, Alert, ImageBackground } from 'react-native';
-import { Text, Item, Label, Input, Icon, Spinner, Button } from 'native-base';
+import { View, StyleSheet, Alert } from 'react-native';
+import { Text, Item, Label, Input, Icon, Spinner } from 'native-base';
 import Validate from '../validated';
+import Stepper, { ProgressStep } from '../../../../components/Stepper';
 
 type TypeErro = undefined | null | 'minCharacter' | 'Correo' | true;
 
@@ -14,18 +15,18 @@ interface Error {
 }
 
 export interface RegisterOtionProps {
-	index: number;
-	render: (
-		item?: string,
-		actions?: (type: TypeErro, state?: boolean) => void,
-		position?: string
-	) => React.ReactNode;
-	action?: React.Dispatch<number>;
+	// index: number;
+	// render: (
+	// 	item?: string,
+	// 	actions?: (type: TypeErro, state?: boolean) => void,
+	// 	position?: string
+	// ) => React.ReactNode;
+	onSubmit?: () => Promise<void>;
 	marginTop?: number;
 }
 
 const RegisterViews: React.SFC<RegisterOtionProps> = props => {
-	const { index, marginTop, render, action } = props;
+	const { marginTop, onSubmit } = props;
 	const [error, setError] = React.useState<Error>({
 		errorType: true,
 		status: false
@@ -53,28 +54,28 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 		telefono: false
 	});
 
-	const setActionError = (type: TypeErro, status: boolean = true) => {
-		setError({ errorType: type, status: status });
-	};
+	// const setActionError = (type: TypeErro, status: boolean = true) => {
+	// 	setError({ errorType: type, status: status });
+	// };
 
-	const getActionsError = (type: string, reload?: React.Dispatch<any>) => {
-		console.log(type);
-		switch (type) {
-			case 'invalid-email':
-				action!(3);
-				break;
-			case 'email-already-in-use':
-				action!(3);
-				break;
-			case 'weak-password':
-				action!(4);
-				break;
+	// const getActionsError = (type: string, reload?: React.Dispatch<any>) => {
+	// 	console.log(type);
+	// 	switch (type) {
+	// 		case 'invalid-email':
+	// 			action!(3);
+	// 			break;
+	// 		case 'email-already-in-use':
+	// 			action!(3);
+	// 			break;
+	// 		case 'weak-password':
+	// 			action!(4);
+	// 			break;
 
-			default:
-				reload!(Math.random());
-				break;
-		}
-	};
+	// 		default:
+	// 			reload!(Math.random());
+	// 			break;
+	// 	}
+	// };
 
 	useDidUpdate(() => {
 		if (name.value.length === 0) {
@@ -85,58 +86,35 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 		}
 	}, [name.value, correo.value]);
 
-	switch (index) {
-		case 0:
-			return (
-				<>
-					<View style={{ flex: 1 }}>
-						<ImageBackground
-							style={{ flex: 1 }}
-							source={{
-								uri:
-									'https://previews.123rf.com/images/romastudio/romastudio1602/romastudio160200293/52915695-foto-de-la-comida-org%C3%A1nica-fondo-del-estudio-de-diferentes-verduras-en-mesa-de-madera.jpg'
-							}}>
-							<View style={styles.background}>
-								<View
-									style={{
-										position: 'absolute',
-										left: 30,
-										top: 50
-									}}>
-									<Text
-										style={{ fontSize: 40, fontWeight: 'bold', color: '#fff' }}>
-										Grid
-									</Text>
-									<Text
-										style={{
-											fontSize: 50,
-											marginTop: -38,
-											marginLeft: 1,
-											fontWeight: 'bold',
-											color: '#75F075'
-										}}>
-										mall
-									</Text>
-								</View>
-								<View style={{ position: 'absolute', left: 30, bottom: 120 }}>
-									<Text
-										style={{ fontSize: 16, color: '#fff', fontWeight: 'bold' }}>
-										Únete a GridMall
-									</Text>
-									<Text style={{ fontSize: 13, width: '45%', color: '#fff' }}>
-										Te ayudaremos a crear una cuenta en pocos pasos
-									</Text>
-								</View>
-							</View>
-						</ImageBackground>
-					</View>
-					{render()}
-				</>
-			);
-		case 1:
-			return (
-				<>
-					<View style={{ marginTop: marginTop }}>
+	const getErrors = (): boolean => {
+		switch (name.value) {
+			case '':
+				return false;
+			case 0:
+
+			default:
+				return false;
+		}
+	};
+
+	return (
+		<Stepper>
+			<ProgressStep
+				onNext={
+					() => {
+						if (name.value === '' || name.value.length < 5) {
+							setError({ status: true, errorType: 'Correo' });
+							return false;
+						} else {
+							setError({ status: false, errorType: true });
+							return true;
+						}
+					}
+					// name.value === '' || name.value.length <= 4 ? false : true
+				}
+				previousBtnStyle={{ color: '#75F075' }}>
+				<View style={styles.root}>
+					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
 							<Text style={styles.title}>¿Cómo te llamas?</Text>
 							<Text note style={{ textAlign: 'center', marginTop: 10 }}>
@@ -145,13 +123,13 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 						</View>
 						<View
 							style={{
-								marginTop: 40,
+								marginTop: 10,
 								width: '100%',
 								justifyContent: 'center',
 								alignItems: 'center'
 							}}>
 							{error.errorType !== true && (
-								<View style={{ marginBottom: 30 }}>
+								<View style={{ marginBottom: 20 }}>
 									<Text note style={{ textAlign: 'center', color: 'red' }}>
 										{error.errorType !== 'minCharacter' &&
 											'Ingrese su nombre completo'}
@@ -176,13 +154,11 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 							</Item>
 						</View>
 					</View>
-					{render(name.value, setActionError, 'displayName')}
-				</>
-			);
-		case 2:
-			return (
-				<>
-					<View style={{ marginTop: marginTop }}>
+				</View>
+			</ProgressStep>
+			<ProgressStep errors={error.status}>
+				<View style={styles.root}>
+					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
 							<Text style={styles.title}>Ingresa tu número de celular</Text>
 							<Text note style={{ textAlign: 'center', marginTop: 10 }}>
@@ -222,14 +198,12 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 							</Item>
 						</View>
 					</View>
-					{render(telefono.value, setActionError, 'phone')}
-				</>
-			);
+				</View>
+			</ProgressStep>
 
-		case 3:
-			return (
-				<>
-					<View style={{ marginTop: marginTop }}>
+			<ProgressStep>
+				<View style={styles.root}>
+					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
 							<Text style={styles.title}>Agrega tu correo electrónico</Text>
 							<Text note style={{ textAlign: 'center', marginTop: 10 }}>
@@ -268,13 +242,12 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 							</Item>
 						</View>
 					</View>
-					{render(correo.value, setActionError, 'email')}
-				</>
-			);
-		case 4:
-			return (
-				<>
-					<View style={{ marginTop: marginTop }}>
+				</View>
+			</ProgressStep>
+
+			<ProgressStep>
+				<View style={styles.root}>
+					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
 							<Text style={styles.title}>Elige una contraseña</Text>
 							<Text note style={{ textAlign: 'center', marginTop: 10 }}>
@@ -309,13 +282,11 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 							</Item>
 						</View>
 					</View>
-					{render(password.value, setActionError, 'password')}
-				</>
-			);
-		case 5:
-			return (
-				<>
-					<View style={{ marginTop: marginTop }}>
+				</View>
+			</ProgressStep>
+			<ProgressStep>
+				<View style={styles.root}>
+					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
 							<Text style={styles.title}>¡Ya casi terminanos!</Text>
 							<Text note style={{ textAlign: 'center', marginTop: 10 }}>
@@ -356,13 +327,11 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 							</Item>
 						</View>
 					</View>
-					{render(falimiliares.value, setActionError, 'falimiliares')}
-				</>
-			);
-		case 6:
-			return (
-				<>
-					<View style={{ marginTop: marginTop }}>
+				</View>
+			</ProgressStep>
+			<ProgressStep>
+				<View style={styles.root}>
+					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
 							<Text style={styles.title}>Finalizar Registro</Text>
 							<Text note style={{ textAlign: 'center', marginTop: 10 }}>
@@ -392,12 +361,10 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 						</Item>
 					</View> */}
 					</View>
-					{render()}
-				</>
-			);
+				</View>
+			</ProgressStep>
 
-		case 7:
-			return (
+			<ProgressStep>
 				<Validate
 					data={{
 						displayName: name.value,
@@ -405,46 +372,6 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 						password: password.value,
 						numberFamily: falimiliares.value,
 						email: correo.value
-					}}
-					errors={(type, message, reload) => {
-						if (type) {
-							if (type === 'network-request-failed') {
-								Alert.alert(
-									'¿Ocurrio un error?',
-									message,
-									[
-										{
-											text: 'cancelar',
-											onPress: () => {
-												action!(0);
-											}
-										},
-
-										{
-											text: 'volver a intentar',
-											onPress: () => {
-												getActionsError(type, reload);
-											}
-										}
-									],
-									{ cancelable: false }
-								);
-							} else {
-								Alert.alert(
-									'¿Ocurrio un error?',
-									message,
-									[
-										{
-											text: 'ok',
-											onPress: () => {
-												getActionsError(type, reload);
-											}
-										}
-									],
-									{ cancelable: false }
-								);
-							}
-						}
 					}}>
 					{status => {
 						if (!status) {
@@ -459,15 +386,9 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 						}
 					}}
 				</Validate>
-			);
-
-		default:
-			return (
-				<View>
-					<Text>Ocurrio un error inesperado</Text>
-				</View>
-			);
-	}
+			</ProgressStep>
+		</Stepper>
+	);
 };
 
 const styles = StyleSheet.create({
@@ -475,6 +396,13 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		textAlign: 'center',
 		fontSize: 18
+	},
+
+	root: {
+		marginTop: 50,
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
 
 	background: {

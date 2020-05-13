@@ -310,6 +310,69 @@ export default ModalComponent;
 ```tsx
 import * as React from 'react';
 import { Container, Text, View, Button, Icon } from 'native-base';
+import HeaderComponent from '../../../components/Header';
+import Stepper, { ProgressStep } from '../../../components/Stepper';
+export interface ExampleProps {
+	navigation: any;
+}
+
+const Example: React.SFC<ExampleProps> = props => {
+	return (
+		<Container>
+			<HeaderComponent title='prueba' background='green'></HeaderComponent>
+			<View style={{ flex: 1 }}>
+				<Stepper>
+					<ProgressStep
+						nextBtnTextStyle={buttonTextStyle}
+						previousBtnTextStyle={buttonTextStyle}>
+						<View style={{ alignItems: 'center' }}>
+							<Text>This is the content within step 1!</Text>
+						</View>
+					</ProgressStep>
+					<ProgressStep
+						nextBtnTextStyle={buttonTextStyle}
+						previousBtnTextStyle={buttonTextStyle}>
+						<View style={{ alignItems: 'center' }}>
+							<Text>This is the content within step 2!</Text>
+						</View>
+					</ProgressStep>
+					<ProgressStep
+						nextBtnTextStyle={buttonTextStyle}
+						previousBtnTextStyle={buttonTextStyle}>
+						<View style={{ alignItems: 'center' }}>
+							<Text>This is the content within step 3!</Text>
+						</View>
+					</ProgressStep>
+				</Stepper>
+			</View>
+		</Container>
+	);
+};
+
+export default Example;
+```
+
+### Stepper (Stepper)
+
+`Es el padre que engobal a progressStep`
+
+### ProgressStep (ProgressStep)
+
+`EL siguiente componente nos permite generar un steeps para el registro de usuario personalizado.`
+
+#### prosp (props? = el parametro es opcional)
+
+##### nextBtnTextStyle?({}) `Darle un stylo personalizado al buttom`
+
+##### previousBtnTextStyle?(string) `Darle un stylo personalizado al buttom`
+
+##### onSubmit?(() => <Promesa>) `Es una funcion que retorna un promesa se puede usar cuando queremos realizar un accion cuando termine el flujo del steeps`
+
+##### finishBtnText?(string) `determina el nombre del bottom cuando este llegue al final de acción`
+
+```tsx
+import * as React from 'react';
+import { Container, Text, View, Button, Icon } from 'native-base';
 import Carousel from '../../../components/Carousel';
 export interface ExampleProps {
 	navigation: any;
