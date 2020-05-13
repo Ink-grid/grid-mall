@@ -42,7 +42,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 		};
 	};
 
-	const name = useInputState();
+	const razon = useInputState();
 	// const apellido = useInputState();
 	const telefono = useInputState();
 	const password = useInputState();
@@ -78,31 +78,21 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 	// };
 
 	useDidUpdate(() => {
-		if (name.value.length === 0) {
+		if (razon.value.length === 0) {
 			setClose(prevs => ({ ...prevs, name: false }));
 		}
-		if (name.value.length > 1) {
+		if (razon.value.length > 1) {
 			setClose(prevs => ({ ...prevs, name: true }));
 		}
-	}, [name.value, correo.value]);
-
-	const getErrors = (): boolean => {
-		switch (name.value) {
-			case '':
-				return false;
-			case 0:
-
-			default:
-				return false;
-		}
-	};
+	}, [razon.value, correo.value]);
 
 	return (
 		<Stepper>
 			<ProgressStep
+				label='Razon.'
 				onNext={
 					() => {
-						if (name.value === '' || name.value.length < 5) {
+						if (razon.value === '' || razon.value.length < 5) {
 							setError({ status: true, errorType: 'Correo' });
 							return false;
 						} else {
@@ -116,14 +106,20 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 				<View style={styles.root}>
 					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
-							<Text style={styles.title}>¿Cómo te llamas?</Text>
-							<Text note style={{ textAlign: 'center', marginTop: 10 }}>
-								Ingresa tu nombre verdadero.
+							<Text style={styles.title}>¿Cual es tu Razón social?</Text>
+							<Text
+								note
+								style={{
+									textAlign: 'center',
+									marginTop: 10,
+									marginBottom: 10
+								}}>
+								Ingresa su Razón social.
 							</Text>
 						</View>
 						<View
 							style={{
-								marginTop: 10,
+								marginTop: 5,
 								width: '100%',
 								justifyContent: 'center',
 								alignItems: 'center'
@@ -132,7 +128,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 								<View style={{ marginBottom: 20 }}>
 									<Text note style={{ textAlign: 'center', color: 'red' }}>
 										{error.errorType !== 'minCharacter' &&
-											'Ingrese su nombre completo'}
+											'Ingrese su razón social completo'}
 									</Text>
 								</View>
 							)}
@@ -142,11 +138,11 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 								}}
 								error={error.status}
 								floatingLabel>
-								<Label>Nombre completo</Label>
-								<Input {...name} autoFocus={true} />
+								<Label>Razon Social</Label>
+								<Input {...razon} autoFocus={true} />
 								{isClose.name && (
 									<Icon
-										onPress={() => name.onChangeText('')}
+										onPress={() => razon.onChangeText('')}
 										active
 										name='close'
 									/>
@@ -156,7 +152,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 					</View>
 				</View>
 			</ProgressStep>
-			<ProgressStep errors={error.status}>
+			<ProgressStep label='R.U.C' errors={error.status}>
 				<View style={styles.root}>
 					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
@@ -201,7 +197,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 				</View>
 			</ProgressStep>
 
-			<ProgressStep>
+			<ProgressStep label='Servicio'>
 				<View style={styles.root}>
 					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
@@ -245,7 +241,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 				</View>
 			</ProgressStep>
 
-			<ProgressStep>
+			<ProgressStep label='Direc.'>
 				<View style={styles.root}>
 					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
@@ -284,7 +280,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 					</View>
 				</View>
 			</ProgressStep>
-			<ProgressStep>
+			<ProgressStep label='Email'>
 				<View style={styles.root}>
 					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
@@ -329,7 +325,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 					</View>
 				</View>
 			</ProgressStep>
-			<ProgressStep>
+			<ProgressStep label='Cel.'>
 				<View style={styles.root}>
 					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
@@ -364,10 +360,10 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 				</View>
 			</ProgressStep>
 
-			<ProgressStep>
+			<ProgressStep label='Confirmar registro'>
 				<Validate
 					data={{
-						displayName: name.value,
+						displayName: razon.value,
 						phone: telefono.value,
 						password: password.value,
 						numberFamily: falimiliares.value,
