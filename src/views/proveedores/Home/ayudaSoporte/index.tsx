@@ -7,21 +7,21 @@ export default class AyudaSoporte extends Component {
     return (
       <Container>
         <Header span>
-
           <Left>
             <Button  >
               <Icon name="arrow-back"  />
             </Button>
           </Left>
-          <View>
+          <Content>
+          <Right>
           <Body>
-
             <H3>Ajustes</H3>
             <H1>Ayuda y soporte</H1>
             <Text>¿Tienes alguna duda? Usa cualquiera 
             de nuestros canales para resolverlo.</Text>
           </Body>
-          </View>          
+          </Right>
+          </Content>          
         </Header>
         <Content>
             <ListItem icon>

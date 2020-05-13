@@ -310,7 +310,7 @@ const SignIn: React.SFC<SignInProps> = props => {
 								marginTop: 100,
 								alignItems: 'center'
 							}}>
-							<Button onPress={() => navigation.navigate('Register')} success>
+							<Button onPress={() => navigation.navigate('UserOption')} success>
 								<Text style={{ textTransform: 'lowercase' }}>
 									Crear cuenta de inkmarket
 								</Text>

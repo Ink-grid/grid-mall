@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
-import { Container,Left,Title, Text,Button,Icon, Header, Content, Form, Item, Input, Label } from 'native-base';
+import { Container,Left,Right,Title, Text,Button,Icon, Header, Content, Form, Item, Input, Label } from 'native-base';
 export default class Perfil extends Component {
   render() {
     return (
-      <Container>
-        <Header>
-          <Title style={{position}}>PERFIL</Title>
-        </Header>
-        
+      <Container>      
+        <Header span>
+        <Left>
           <Button >
             <Icon name="arrow-back"></Icon>
           </Button>
-          
-         
+        </Left> 
+        <Content>
+          <Right>
+          <Title>PERFIL</Title>
+          </Right>
+          </Content>
+        </Header> 
+                   
         <Content>
           <Form>
             <Item fixedLabel>

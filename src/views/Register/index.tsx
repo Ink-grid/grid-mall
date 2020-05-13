@@ -1,11 +1,15 @@
 /** @format */
 
 import * as React from 'react';
-import { Container, Icon, Button, Text } from 'native-base';
+import { Container, Icon, Button, Text, Item, Label, Input } from 'native-base';
 import { View, StyleSheet, Keyboard, Alert, BackHandler } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/core';
+// //import RegisterViews from './components/views';
+// import Stepper, { ProgressStep } from '../../components/Stepper';
+// import HomeRegister from './components/Views';
 import RegisterViews from './components/views';
+import HomeRegister from './components/ImageLogo';
 
 export interface RegisterProps {
 	navigation: any;
@@ -85,84 +89,28 @@ const Register: React.SFC<RegisterProps> = props => {
 					</Button>
 				</View>
 			) : null}
-			<View style={state !== 0 ? styles.content : { flex: 1 }}>
-				<RegisterViews
-					index={state}
-					action={setstate}
-					marginTop={marginTop}
-					render={(item, errorAction, position) => (
-						<View
-							style={{
-								marginTop: 20,
-								width: '100%',
-								paddingLeft: 10,
-								paddingRight: 10
-							}}>
-							<Button
-								onPress={() => {
-									if (position) {
-										if (position === 'phone') {
-											if (!item!.match(phoneValid)) {
-												errorAction!('Correo', true);
-												return null;
-											}
-										}
-										if (position === 'email') {
-											if (!item!.match(emailValid)) {
-												errorAction!('Correo', true);
-												return null;
-											}
-										}
-										if (position === 'password') {
-											if (item!.length <= 5) {
-												errorAction!('Correo', true);
-												return null;
-											}
-										}
-										if (position === 'falimiliares') {
-											if (item!.length >= 2) {
-												errorAction!('Correo', true);
-												return null;
-											}
-										}
-									}
-									if (item === undefined) {
-										if (state === 0 || state === 6) {
-											setstate(prevs => prevs + 1);
-											return;
-										}
-										if (errorAction) {
-											errorAction(undefined);
-										}
 
-										//alert('por favor registre su' + item);
-										return;
-									}
-									if (item!.length === 0) {
-										errorAction!(null);
-										return;
-									}
-									//console.log(errorAction);
-									if (errorAction) {
-										errorAction(true, false);
-									}
-									setstate(prevs => prevs + 1);
-								}}
-								full
-								style={{ borderRadius: 10, backgroundColor: '#75F075' }}>
-								<Text style={{ textTransform: 'lowercase' }}>
-									{state === 6 ? 'Registrarte' : 'Siguiente'}
-								</Text>
-							</Button>
-						</View>
-					)}
-				/>
-				{/* {RegisterOtion(state, marginTop)} */}
-			</View>
+			{state === 0 && <HomeRegister />}
+
+			{state !== 0 && (
+				<View style={{ flex: 1 }}>
+					<RegisterViews />
+				</View>
+			)}
+
 			{state === 0 && (
-				<TouchableOpacity onPress={() => navigation.goBack()}>
-					<Text style={styles.footer}>¿Ya tienes una cuenta?</Text>
-				</TouchableOpacity>
+				<View style={{ padding: 10 }}>
+					<Button
+						onPress={() => setstate(1)}
+						full
+						style={{ borderRadius: 10, backgroundColor: '#75F075' }}>
+						<Text style={{ textTransform: 'lowercase' }}>{'Siguiente'}</Text>
+					</Button>
+
+					<TouchableOpacity onPress={() => navigation.goBack()}>
+						<Text style={styles.footer}>¿Ya tienes una cuenta?</Text>
+					</TouchableOpacity>
+				</View>
 			)}
 		</Container>
 	);

@@ -26,6 +26,7 @@ import {
 } from '../views/proveedores';
 import { Platform } from 'react-native';
 import Prueba from '../views/proveedores/Prueba';
+import Usuarios from '../views/Register/Usuarios';
 
 //import  home de proveedores, ayuda, perfil, terminos y condiciones
 import AyudaSoporte from '../views/proveedores/Home/ayudaSoporte';
@@ -132,6 +133,13 @@ const Route: React.SFC<RouteProps> = () => {
 									component={SignIn}
 									options={{ swipeEnabled: false }}
 								/>
+
+								<Drawer.Screen
+									name='UserOption'
+									component={Usuarios}
+									options={{ swipeEnabled: false }}
+								/>
+
 								<Drawer.Screen
 									name='Register'
 									component={Register}

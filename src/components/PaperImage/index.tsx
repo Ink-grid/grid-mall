@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
 	},
 
 	description: {
+		maxWidth: '80%',
 		color: '#ffff',
 		width: 350,
 		textAlign: 'center',
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
 		fontSize: 10
 	},
 	headerImage: {
-		width: 122.5,
+		width: '100%',
 		backgroundColor: 'red',
 		borderRadius: 10,
 		//width: 200,
