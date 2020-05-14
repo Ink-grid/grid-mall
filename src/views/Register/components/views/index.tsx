@@ -6,6 +6,7 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { Text, Item, Label, Input, Icon, Spinner } from 'native-base';
 import Validate from '../validated';
 import Stepper, { ProgressStep } from '../../../../components/Stepper';
+import { validar_clave } from '../../../../utils/utils';
 
 type TypeErro = undefined | null | 'minCharacter' | 'Correo' | true;
 
@@ -32,6 +33,9 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 		status: false
 	});
 
+	const phoneValid = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$/;
+	const emailValid = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+
 	const useInputState = (initialValue: string = '') => {
 		const [value, setValue] = React.useState<any>(initialValue);
 		return {
@@ -45,7 +49,10 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 	const razon = useInputState();
 	// const apellido = useInputState();
 	const telefono = useInputState();
+	const service = useInputState();
+	const ruc = useInputState();
 	const password = useInputState();
+	const driection = useInputState();
 	const correo = useInputState();
 	const falimiliares = useInputState();
 
@@ -111,8 +118,8 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 								note
 								style={{
 									textAlign: 'center',
-									marginTop: 10,
-									marginBottom: 10
+									marginTop: 15,
+									marginBottom: 15
 								}}>
 								Ingresa su Razón social.
 							</Text>
@@ -152,7 +159,243 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 					</View>
 				</View>
 			</ProgressStep>
-			<ProgressStep label='R.U.C' errors={error.status}>
+
+			<ProgressStep
+				label='R.U.C'
+				onNext={() => {
+					if (ruc.value === '' || ruc.value.length < 5) {
+						setError({ status: true, errorType: 'Correo' });
+						return false;
+					} else {
+						setError({ status: false, errorType: true });
+						return true;
+					}
+				}}>
+				<View style={styles.root}>
+					<View style={{ marginTop: marginTop, width: '90%' }}>
+						<View>
+							<Text style={styles.title}>Agrega tu R.U.C</Text>
+							<Text
+								note
+								style={{
+									textAlign: 'center',
+									marginTop: 15,
+									marginBottom: 10
+								}}>
+								Agregar tu R.U.C te ayuda a mejorar la confiabilidad de tus
+								cliente.
+							</Text>
+						</View>
+						<View
+							style={{
+								marginTop: 10,
+								justifyContent: 'center',
+								alignItems: 'center'
+							}}>
+							{error.errorType !== true && (
+								<View style={{ marginBottom: 30 }}>
+									<Text style={{ textAlign: 'center', color: 'red' }}>
+										{error.errorType !== 'minCharacter' &&
+											'El R.U.C ingresado es invalido, por favor ingrese un correo valido'}
+									</Text>
+								</View>
+							)}
+							<Item error={error.status} style={{ width: '95%' }} floatingLabel>
+								<Label>R.U.C</Label>
+								<Input {...ruc} autoFocus={true} />
+								{isClose.name && (
+									<Icon
+										onPress={() => ruc.onChangeText('')}
+										active
+										name='close'
+									/>
+								)}
+							</Item>
+						</View>
+					</View>
+				</View>
+			</ProgressStep>
+			<ProgressStep
+				label='Servi.'
+				onNext={() => {
+					if (service.value === '' || service.value.length < 3) {
+						setError({ status: true, errorType: 'Correo' });
+						return false;
+					} else {
+						setError({ status: false, errorType: true });
+						return true;
+					}
+				}}>
+				<View style={styles.root}>
+					<View style={{ marginTop: marginTop, width: '90%' }}>
+						<View>
+							<Text style={styles.title}>Tipo de negoció o servicio</Text>
+							<Text
+								note
+								style={{
+									textAlign: 'center',
+									marginTop: 15,
+									marginBottom: 10
+								}}>
+								Ingresa tu negocio para poder efectuar mejores soluciones de
+								largo alcance.
+							</Text>
+						</View>
+						<View
+							style={{
+								marginTop: 10,
+								justifyContent: 'center',
+								alignItems: 'center'
+							}}>
+							{error.errorType !== true && (
+								<View style={{ marginBottom: 30 }}>
+									<Text note style={{ textAlign: 'center', color: 'red' }}>
+										{error.errorType !== 'minCharacter' &&
+											'Ingrese un negocio válido'}
+									</Text>
+								</View>
+							)}
+							<Item style={{ width: '95%' }} error={error.status} floatingLabel>
+								<Label>Servició o Negocio</Label>
+								<Input {...service} autoFocus={true} />
+								{isClose.name && (
+									<Icon
+										onPress={() => service.onChangeText(null)}
+										active
+										name='close'
+									/>
+								)}
+							</Item>
+						</View>
+					</View>
+				</View>
+			</ProgressStep>
+
+			<ProgressStep
+				label='Direc.'
+				onNext={() => {
+					if (driection.value === '' || driection.value.length < 3) {
+						setError({ status: true, errorType: 'Correo' });
+						return false;
+					} else {
+						setError({ status: false, errorType: true });
+						return true;
+					}
+				}}>
+				<View style={styles.root}>
+					<View style={{ marginTop: marginTop, width: '90%' }}>
+						<View>
+							<Text style={styles.title}>Ingrese su Dirección</Text>
+							<Text
+								note
+								style={{
+									textAlign: 'center',
+									marginTop: 15,
+									marginBottom: 10
+								}}>
+								Ingrese la dirección de su negocio para determinar el nivel
+								credibilidad a sus clientes.
+							</Text>
+						</View>
+						<View
+							style={{
+								marginTop: 10,
+								justifyContent: 'center',
+								alignItems: 'center'
+							}}>
+							{error.errorType !== true && (
+								<View style={{ marginBottom: 20 }}>
+									<Text style={{ textAlign: 'center', color: 'red' }}>
+										{error.errorType !== 'minCharacter' &&
+											'Dirección incorrecta, por favor ingrese una direccón validad'}
+									</Text>
+								</View>
+							)}
+							<Item error={error.status} style={{ width: '95%' }} floatingLabel>
+								<Label>Dirección</Label>
+								<Input {...driection} autoFocus={true} />
+								{isClose.name && (
+									<Icon
+										onPress={() => driection.onChangeText('')}
+										active
+										name='close'
+									/>
+								)}
+							</Item>
+						</View>
+					</View>
+				</View>
+			</ProgressStep>
+			<ProgressStep
+				label='Email'
+				onNext={() => {
+					if (correo.value === '' || correo.value.length < 3) {
+						setError({ status: true, errorType: 'Correo' });
+						return false;
+					} else if (!correo.value.match(emailValid)) {
+						setError({ status: true, errorType: 'Correo' });
+						return false;
+					} else {
+						setError({ status: false, errorType: true });
+						return true;
+					}
+				}}>
+				<View style={styles.root}>
+					<View style={{ marginTop: marginTop, width: '90%' }}>
+						<View>
+							<Text style={styles.title}>Agrega tu correo electrónico</Text>
+							<Text note style={{ textAlign: 'center', marginTop: 10 }}>
+								Agregar un correo electrónico te ayuda a proteger tu cuenta,
+								recibir facturas electronicas y mucho más.
+							</Text>
+						</View>
+						<View
+							style={{
+								marginTop: 10,
+								justifyContent: 'center',
+								alignItems: 'center'
+							}}>
+							{error.errorType !== true && (
+								<View style={{ marginBottom: 30 }}>
+									<Text style={{ textAlign: 'center', color: 'red' }}>
+										{error.errorType !== 'minCharacter' &&
+											'El correo ingresado es invalido, por favor ingrese un correo valido'}
+									</Text>
+								</View>
+							)}
+							<Item error={error.status} style={{ width: '95%' }} floatingLabel>
+								<Label>Correo electronico</Label>
+								<Input
+									{...correo}
+									keyboardType='email-address'
+									autoFocus={true}
+								/>
+								{isClose.name && (
+									<Icon
+										onPress={() => correo.onChangeText('')}
+										active
+										name='close'
+									/>
+								)}
+							</Item>
+						</View>
+					</View>
+				</View>
+			</ProgressStep>
+			<ProgressStep
+				label='Cel.'
+				onNext={() => {
+					if (telefono.value === '' || telefono.value.length < 3) {
+						setError({ status: true, errorType: 'Correo' });
+						return false;
+					} else if (!telefono.value.match(phoneValid)) {
+						setError({ status: true, errorType: 'Correo' });
+						return false;
+					} else {
+						setError({ status: false, errorType: true });
+						return true;
+					}
+				}}>
 				<View style={styles.root}>
 					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
@@ -196,52 +439,17 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 					</View>
 				</View>
 			</ProgressStep>
-
-			<ProgressStep label='Servicio'>
-				<View style={styles.root}>
-					<View style={{ marginTop: marginTop, width: '90%' }}>
-						<View>
-							<Text style={styles.title}>Agrega tu correo electrónico</Text>
-							<Text note style={{ textAlign: 'center', marginTop: 10 }}>
-								Agregar un correo electrónico te ayuda a proteger tu cuenta,
-								recibir facturas electronicas y mucho más.
-							</Text>
-						</View>
-						<View
-							style={{
-								marginTop: 40,
-								justifyContent: 'center',
-								alignItems: 'center'
-							}}>
-							{error.errorType !== true && (
-								<View style={{ marginBottom: 30 }}>
-									<Text style={{ textAlign: 'center', color: 'red' }}>
-										{error.errorType !== 'minCharacter' &&
-											'El correo ingresado es invalido, por favor ingrese un correo valido'}
-									</Text>
-								</View>
-							)}
-							<Item error={error.status} style={{ width: '95%' }} floatingLabel>
-								<Label>Correo electronico</Label>
-								<Input
-									{...correo}
-									keyboardType='email-address'
-									autoFocus={true}
-								/>
-								{isClose.name && (
-									<Icon
-										onPress={() => correo.onChangeText('')}
-										active
-										name='close'
-									/>
-								)}
-							</Item>
-						</View>
-					</View>
-				</View>
-			</ProgressStep>
-
-			<ProgressStep label='Direc.'>
+			<ProgressStep
+				label='Pass.'
+				onNext={() => {
+					if (!validar_clave(password.value)) {
+						setError({ status: true, errorType: 'Correo' });
+						return false;
+					} else {
+						setError({ status: false, errorType: true });
+						return true;
+					}
+				}}>
 				<View style={styles.root}>
 					<View style={{ marginTop: marginTop, width: '90%' }}>
 						<View>
@@ -253,7 +461,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 						</View>
 						<View
 							style={{
-								marginTop: 40,
+								marginTop: 20,
 								justifyContent: 'center',
 								alignItems: 'center'
 							}}>
@@ -261,7 +469,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 								<View style={{ marginBottom: 30 }}>
 									<Text style={{ textAlign: 'center', color: 'red' }}>
 										{error.errorType !== 'minCharacter' &&
-											'Tu contraseña debe tener como minimo 6 letras, número y simbolos (como "!" y "%%")'}
+											'Tu contraseña debe tener como minimo 6 letras, número, simbolos (como "!" y "%%") y minimo una letra mayuscula'}
 									</Text>
 								</View>
 							)}
@@ -280,108 +488,20 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 					</View>
 				</View>
 			</ProgressStep>
-			<ProgressStep label='Email'>
-				<View style={styles.root}>
-					<View style={{ marginTop: marginTop, width: '90%' }}>
-						<View>
-							<Text style={styles.title}>¡Ya casi terminanos!</Text>
-							<Text note style={{ textAlign: 'center', marginTop: 10 }}>
-								Agrega el numero de personas que viven en su hogar, de esta
-								manera podremos realizar una entrega acorde a sus necesidades
-								familiares.
-							</Text>
-						</View>
 
-						<View
-							style={{
-								marginTop: 40,
-								justifyContent: 'center',
-								alignItems: 'center'
-							}}>
-							{error.errorType !== true && (
-								<View style={{ marginBottom: 30 }}>
-									<Text note style={{ textAlign: 'center', color: 'red' }}>
-										{error.errorType !== 'minCharacter' &&
-											'Ingrese un número válido y menor a 2 dígitos'}
-									</Text>
-								</View>
-							)}
-							<Item style={{ width: '95%' }} error={error.status} floatingLabel>
-								<Label>Número</Label>
-								<Input
-									{...falimiliares}
-									keyboardType='numeric'
-									autoFocus={true}
-								/>
-								{isClose.name && (
-									<Icon
-										onPress={() => falimiliares.onChangeText(null)}
-										active
-										name='close'
-									/>
-								)}
-							</Item>
-						</View>
-					</View>
-				</View>
-			</ProgressStep>
-			<ProgressStep label='Cel.'>
+			<ProgressStep label='Confir.' finishBtnText='Registrarte'>
 				<View style={styles.root}>
-					<View style={{ marginTop: marginTop, width: '90%' }}>
+					<View style={{ marginTop: 100, width: '90%' }}>
 						<View>
 							<Text style={styles.title}>Finalizar Registro</Text>
 							<Text note style={{ textAlign: 'center', marginTop: 10 }}>
-								Al tocar "Registrarte" , aceptas nuestras Condiciones, la
+								Al tocar "Registrarte", aceptas nuestras Condiciones, la
 								Política de datos y la Política de cookies. Es posible que te
-								enviemos notificaciones por SMS, que puedes desactivar cuando
-								quieras.
+								enviemos notificaciones, que puedes desactivar cuando quieras.
 							</Text>
 						</View>
-
-						{/* <View
-						style={{
-							marginTop: 50,
-							justifyContent: 'center',
-							alignItems: 'center'
-						}}>
-						<Item style={{ width: '95%' }} floatingLabel>
-							<Label>contraseña</Label>
-							<Input {...password} autoFocus={true} />
-							{isClose.name && (
-								<Icon
-									onPress={() => password.onChangeText('')}
-									active
-									name='close'
-								/>
-							)}
-						</Item>
-					</View> */}
 					</View>
 				</View>
-			</ProgressStep>
-
-			<ProgressStep label='Confirmar registro'>
-				<Validate
-					data={{
-						displayName: razon.value,
-						phone: telefono.value,
-						password: password.value,
-						numberFamily: falimiliares.value,
-						email: correo.value
-					}}>
-					{status => {
-						if (!status) {
-							return (
-								<>
-									<Spinner color='#495FA5' />
-									<Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
-										creando tu cuenta ...
-									</Text>
-								</>
-							);
-						}
-					}}
-				</Validate>
 			</ProgressStep>
 		</Stepper>
 	);

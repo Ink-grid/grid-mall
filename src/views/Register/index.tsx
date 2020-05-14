@@ -19,8 +19,6 @@ const Register: React.SFC<RegisterProps> = props => {
 	const { navigation } = props;
 	const [state, setstate] = React.useState(0);
 	const [marginTop, setMargintop] = React.useState(-100);
-	const phoneValid = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$/;
-	const emailValid = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
 
 	const _keyboardDidShow = () => {
 		setMargintop(0);
