@@ -16,6 +16,10 @@ import Carousel from '../../../components/Carousel';
 import { Image, ScrollView } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
+import Perfil from './perfil';
+import TerminosCondiciones from './terminosCondiciones';
+import AyudaSoporte from './ayudaSoporte';
+
 export interface HomeProps {
 	navigation: any;
 }
@@ -91,13 +95,16 @@ const Home: React.SFC<HomeProps> = props => {
 	const optionsActionsAsync = async (index: number) => {
 		switch (index) {
 			case 0:
-				alert('profile');
+				navigation.navigate('Perfil');
+				//alert('profile');
 				break;
 			case 1:
-				alert('privacidad');
+				navigation.navigate('TerminosCondiciones');
+				//alert('privacidad');
 				break;
 			case 2:
-				alert('ayuda');
+				navigation.navigate('AyudaSoporte');
+				//alert('ayuda');
 				break;
 			case 3:
 				navigation.navigate('Logout');
