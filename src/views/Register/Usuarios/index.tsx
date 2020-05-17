@@ -1,14 +1,35 @@
 /** @format */
 
 import * as React from 'react';
-import { View } from 'react-native';
+import { View, RefreshControl } from 'react-native';
 import PaperImage from '../../../components/PaperImage';
 import { Container } from 'native-base';
 import HeaderComponent from '../../../components/Header';
+import CustomList from '../../../components/CustomList';
+import gql from 'graphql-tag';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export interface UsuariosProps {
 	navigation: any;
 }
+
+type client = {
+	_uid: string;
+	name: string;
+	description: string;
+	uri: string;
+};
+
+const getClients = gql`
+	{
+		getTypeClients {
+			_uid
+			name
+			description
+			uri
+		}
+	}
+`;
 
 const Usuarios: React.SFC<UsuariosProps> = props => {
 	const { navigation } = props;
@@ -19,32 +40,33 @@ const Usuarios: React.SFC<UsuariosProps> = props => {
 					iconName: 'arrowleft',
 					iconType: 'AntDesign',
 					actions: () => navigation.goBack()
-				}}></HeaderComponent>
+				}}
+			/>
 			<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-				{[
-					{
-						uri:
-							'https://www.esan.edu.pe/conexion/actualidad/2020/03/09/1500x844_gestion_proveedores.jpg',
-						title: 'Proveedor',
-						description:
-							'se parte de nuestros servicios para facilitar tus ventas al por mayor con las mejores herramientas'
-					},
-					{
-						uri: 'https://lyd.org/wp-content/uploads/2019/03/consumidor.jpg',
-						title: 'Consumidor',
-						description:
-							'En grid mall encontrars los mejores productos de primera necesidad al por mayor de los mejores proveedore de lima'
-					}
-				].map(ele => (
-					<View key={ele.uri} style={{ padding: 10, width: '90%' }}>
-						<PaperImage
-							onPress={() => navigation.navigate('Register')}
-							vertical
-							description={ele.description}
-							title={ele.title}
-							uri={ele.uri}></PaperImage>
-					</View>
-				))}
+				<CustomList
+					query={getClients}
+					resolve='getTypeClients'
+					renderIten={(data: [client], { refreshing, onRefresh }) => (
+						<ScrollView
+							style={{ flex: 1 }}
+							refreshControl={
+								<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+							}>
+							{data.map((client, index) => (
+								<View key={index} style={{ padding: 10, width: '100%' }}>
+									<PaperImage
+										onPress={() =>
+											navigation.navigate('Register', { uid: client._uid })
+										}
+										vertical
+										description={client.description}
+										title={client.name}
+										uri={client.uri}></PaperImage>
+								</View>
+							))}
+						</ScrollView>
+					)}
+				/>
 			</View>
 		</Container>
 	);

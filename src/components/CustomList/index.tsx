@@ -67,7 +67,8 @@ export interface CustomListProps {
 	query: any;
 	renderIten: (
 		data: any,
-		deletedItems?: (value: any) => Promise<void>
+		refresh: { onRefresh: () => void; refreshing: boolean },
+		deletedItems: (value: any) => Promise<void>
 	) => React.ReactChild;
 	resolve: string;
 	isError?: (state: boolean, reload?: (value?: any) => Promise<any>) => void;
@@ -91,6 +92,20 @@ const CustomList: React.SFC<CustomListProps> = props => {
 		variables: variables
 	});
 
+	const [refreshing, setRefreshing] = React.useState(false);
+
+	//[*] async function for update items
+	const refreshingAsync = async () => {
+		await refetch();
+	};
+
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		refreshingAsync();
+		//setRefreshAction(Math.random());
+		setRefreshing(false);
+	}, [refreshing]);
+
 	// [*] deleted items  async by uid
 	const deletedItems = async (value: any) => {
 		try {
@@ -112,15 +127,15 @@ const CustomList: React.SFC<CustomListProps> = props => {
 
 	if (error) {
 		return (
-			<View style={{ height: '380px' }}>
+			<View style={{ height: 380, marginTop: 10 }}>
 				<View>
-					<Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
+					<Text note style={{ textAlign: 'center', fontWeight: 'bold' }}>
 						Ocorrio un error inesperado, por favor verifique su conexión a
 						internet
 					</Text>
 					<View style={styles.center}>
 						<Button style={{ width: '50%' }} onPress={() => refetch()}>
-							Volver a intentar
+							<Text>Volver a intentar </Text>
 						</Button>
 					</View>
 				</View>
@@ -148,7 +163,11 @@ const CustomList: React.SFC<CustomListProps> = props => {
 
 	return (
 		<View style={{ flex: 1, padding: 10 }}>
-			{renderIten(data[resolve], deletedItems)}
+			{renderIten(
+				data[resolve],
+				{ onRefresh: onRefresh, refreshing: refreshing },
+				deletedItems
+			)}
 		</View>
 	);
 };

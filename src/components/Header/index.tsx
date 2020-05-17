@@ -32,6 +32,7 @@ export interface HeaderComponentProps {
 	rightItems?: Array<RightType>;
 	androidStatusBarColor?: string;
 	background?: backgroundType;
+	badge?: React.ReactChild;
 }
 
 const HeaderComponent: React.SFC<HeaderComponentProps> = props => {
@@ -40,6 +41,7 @@ const HeaderComponent: React.SFC<HeaderComponentProps> = props => {
 		rightItems,
 		androidStatusBarColor = '#000000',
 		title,
+		badge,
 		background = 'white'
 	} = props;
 
@@ -121,6 +123,8 @@ const HeaderComponent: React.SFC<HeaderComponentProps> = props => {
 					))}
 				</Right>
 			)}
+
+			{badge && <Right>{badge}</Right>}
 		</Header>
 	);
 };

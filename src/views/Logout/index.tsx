@@ -46,7 +46,13 @@ const Loguot: React.SFC<LoguotProps> = props => {
 	);
 
 	return (
-		<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+		<View
+			style={{
+				flex: 1,
+				justifyContent: 'center',
+				alignItems: 'center',
+				backgroundColor: '#fff'
+			}}>
 			<Spinner />
 			<Text note>saliendo...</Text>
 		</View>

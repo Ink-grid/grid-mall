@@ -2,9 +2,8 @@
 
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Thumbnail, Text, Spinner, Icon } from 'native-base';
+import { Thumbnail, Text, Icon, Button, Spinner } from 'native-base';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 
 let uri =
@@ -12,30 +11,17 @@ let uri =
 
 export interface CustomDrawerContentProps {
 	navigation?: any;
-	user?: any;
+	query?: any;
+	useruid: string;
 }
 
-// obtenemos las rutas de la base de datos
-const query = gql`
-	query($type: String!) {
-		getAccess(type: $type) {
-			icon
-			typeIcon
-			name
-			route
-		}
-	}
-`;
-
 const CustomDrawerContent: React.SFC<CustomDrawerContentProps> = props => {
-	const { navigation, user } = props;
+	const { navigation, query, useruid } = props;
 
-	// relizamos la consulta de las rutas con el hooks que nos da @apollo
-	const { loading, error, data } = useQuery(query, {
-		variables: { type: 'proveedor' }
+	const { loading, error, data, refetch } = useQuery(query, {
+		variables: { uid: useruid }
 	});
 
-	// si existe un error en la consulta especificamos la falla al cliente
 	if (error && !loading) {
 		return (
 			<View
@@ -43,19 +29,25 @@ const CustomDrawerContent: React.SFC<CustomDrawerContentProps> = props => {
 					flex: 1,
 					justifyContent: 'center',
 					alignContent: 'center',
-					alignItems: 'center'
+					alignItems: 'center',
+					backgroundColor: '#fff'
 				}}>
-				<Text note>Ocurrio un error inesperado</Text>
+				<Text note>
+					Ocurrio un error inesperado, revise su conexeón a internet.
+				</Text>
+				<Button onPress={() => refetch()}>
+					<Text>Volver a intentar</Text>
+				</Button>
 			</View>
 		);
 	}
 
-	// loading por defecto es true, por lo tanto retornamos un loading hasta que sea falso
 	if (loading && !data) {
 		return (
 			<View
 				style={{
 					flex: 1,
+					backgroundColor: '#fff',
 					justifyContent: 'center',
 					alignContent: 'center',
 					alignItems: 'center'
@@ -65,7 +57,6 @@ const CustomDrawerContent: React.SFC<CustomDrawerContentProps> = props => {
 		);
 	}
 
-	// si todo esta bien retornamos las routas
 	return (
 		<>
 			<View style={styles.profile}>
@@ -83,15 +74,18 @@ const CustomDrawerContent: React.SFC<CustomDrawerContentProps> = props => {
 					}}>
 					mall
 				</Text>
-				<Text note style={[styles.userName, { marginTop: -20 }]}>
-					{user.user && user.user.displayName}
+				<Text note style={[styles.userName, { marginTop: 5 }]}>
+					{data.getClient.razon_social}
 				</Text>
-				<Text numberOfLines={1} note style={styles.userName}>
-					{user.user && user.user.email}
+				<Text
+					numberOfLines={1}
+					note
+					style={[styles.userName, { marginTop: 1 }]}>
+					{data.getClient.email}
 				</Text>
 			</View>
 			<DrawerContentScrollView {...props}>
-				{data.getAccess.map((route: any, index: number) => (
+				{data.getClient.user.access.map((route: any, index: number) => (
 					<DrawerItem
 						key={index}
 						style={[index !== 0 ? { marginTop: -10 } : { marginTop: 5 }]}

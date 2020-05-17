@@ -11,6 +11,7 @@ export interface CarouselProps {
 	items: any;
 	style: 'stats' | 'Slide';
 	transparent?: boolean;
+	title?: string;
 	bulletTheme?: 'dark' | 'white';
 	PerInterval?: number;
 	renderItem?: (data: any, index?: number) => React.ReactChild;
@@ -33,7 +34,8 @@ const Carousel: React.SFC<CarouselProps> = props => {
 		bulledPosition = { top: 0 },
 		auto = false,
 		delay = 3000,
-		nextAction
+		nextAction,
+		title
 	} = props;
 
 	//[*] items perInterval default 1
@@ -139,6 +141,12 @@ const Carousel: React.SFC<CarouselProps> = props => {
 					})}
 				</ScrollView>
 				<View style={[styles.bullets, bulledPosition]}>{bullets}</View>
+				{title && (
+					<View
+						style={[styles.bullets, { top: 0, justifyContent: 'flex-start' }]}>
+						<Text>{title}</Text>
+					</View>
+				)}
 			</View>
 			{nextAction && (
 				<View style={{ marginTop: 20 }}>{nextAction(stepperPlay)}</View>

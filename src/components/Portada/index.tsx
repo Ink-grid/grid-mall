@@ -7,7 +7,7 @@ import { Text } from 'native-base';
 export interface PortadaProps {
 	title: string;
 	uri: string;
-	description: string;
+	description?: string;
 	styleRoot?: any;
 }
 
@@ -23,7 +23,7 @@ const Portada: React.SFC<PortadaProps> = props => {
 			/>
 			<View style={styles.contentText}>
 				<Text style={styles.text}>{title.toUpperCase()}</Text>
-				<Text style={styles.descipcion}>{description}</Text>
+				{description && <Text style={styles.descipcion}>{description}</Text>}
 			</View>
 		</View>
 	);
@@ -32,6 +32,7 @@ const Portada: React.SFC<PortadaProps> = props => {
 const styles = StyleSheet.create({
 	contentText: {
 		position: 'absolute',
+		borderRadius: 5,
 		backgroundColor: 'rgba(0, 0, 0, 0.5)',
 		width: '100%',
 		alignItems: 'center',
@@ -42,8 +43,10 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		color: '#ffff',
+		padding: 2,
+		textAlign: 'center',
 		fontWeight: 'bold',
-		fontSize: 20
+		fontSize: 10
 	},
 	descipcion: {
 		color: '#ffff',
@@ -54,9 +57,10 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		flex: 0,
-		height: 150
+		height: 80
 	},
 	headerImage: {
+		borderRadius: 5,
 		flex: 0,
 		height: '100%',
 		width: '100%'

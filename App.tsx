@@ -4,6 +4,8 @@ import React from 'react';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import { HttpLink } from 'apollo-link-http';
+import * as eva from '@eva-design/eva';
+import { ApplicationProvider } from '@ui-kitten/components';
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { onError } from 'apollo-link-error';
@@ -54,7 +56,9 @@ export default function App() {
 	return (
 		<ApolloProvider client={client}>
 			<StoreProvider>
-				<Route />
+				<ApplicationProvider {...eva} theme={eva.light}>
+					<Route />
+				</ApplicationProvider>
 			</StoreProvider>
 		</ApolloProvider>
 	);

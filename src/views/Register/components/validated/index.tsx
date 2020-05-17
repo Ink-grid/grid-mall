@@ -9,11 +9,17 @@ import { Alert, AsyncStorage } from 'react-native';
 import { StoreContext } from '../../../../context/StoreContext';
 
 type user = {
-	displayName: string;
-	phone: number;
+	razon_social: string;
+	tipo_client: string;
+	user: string;
+	ruc: string;
+	frecuencia_compra: string;
+	categories: string[];
+	lugares_compra: string;
+	phone: string;
 	email: string;
 	password: string;
-	numberFamily: number;
+	direction: string;
 };
 
 export interface ValidateProps {
@@ -27,33 +33,41 @@ export interface ValidateProps {
 	) => void;
 }
 
-const CREATE_USER = gql`
+const CREATE_CLIENT = gql`
 	mutation CreateClient(
-		$_uid: String!
+		$uid: String!
 		$razon_social: String!
+		$tipo_client: String!
+		$user: String!
+		$ruc: String!
+		$frecuencia_compra: String!
+		$categories: [String]!
+		$lugares_compra: String!
 		$phone: String!
 		$email: String!
-		$password: String!
-		$quantity_family: Int!
+		$direction: String!
 	) {
 		createClient(
 			input: {
-				_uid: $_uid
+				uid: $uid
 				razon_social: $razon_social
+				tipo_client: $tipo_client
+				user: $user
+				ruc: $ruc
+				frecuencia_compra: $frecuencia_compra
+				categories: $categories
+				lugares_compra: $lugares_compra
 				phone: $phone
 				email: $email
-				password: $password
-				quantity_family: $quantity_family
+				direction: $direction
 			}
-		) {
-			_uid
-		}
+		)
 	}
 `;
 
 const Validate: React.SFC<ValidateProps> = props => {
 	// create mutation
-	const [createClient] = useMutation(CREATE_USER);
+	const [createClient] = useMutation(CREATE_CLIENT);
 	const { data, navigation, children, errors } = props;
 	const [isRegister, setRegister] = React.useState(false);
 	const [reloadstatus, setReload] = React.useState<any>(false);
@@ -73,31 +87,45 @@ const Validate: React.SFC<ValidateProps> = props => {
 		actions.setUser(user);
 	};
 
+	console.log(data);
+
 	const registerUser = async () => {
 		try {
 			await auth().createUserWithEmailAndPassword(data.email, data.password);
 			//console.log(data);
-			const user = auth().currentUser;
-			if (user) {
+			const users = auth().currentUser;
+			if (users) {
 				//console.log(user.uid);
-				let _uid: string = user.uid;
-				let razon_social = data.displayName;
+
+				let uid = users.uid;
+				let razon_social = data.razon_social;
+				let tipo_client = data.tipo_client;
+				let user = data.user;
+				let ruc = data.ruc;
+				let frecuencia_compra = data.frecuencia_compra;
+				let categories = data.categories;
+				let lugares_compra = data.lugares_compra;
 				let phone = data.phone;
 				let email = data.email;
-				let password = data.password;
-				let quantity_family = parseInt(data.numberFamily.toString());
+				let direction = data.direction;
+
 				await createClient({
 					variables: {
-						_uid,
+						uid,
 						razon_social,
+						tipo_client,
+						user,
+						ruc,
+						frecuencia_compra,
+						categories,
+						lugares_compra,
 						phone,
 						email,
-						password,
-						quantity_family
+						direction
 					}
 				});
-				await AsyncStorage.setItem('userToken', user.uid);
-				await AsyncStorage.setItem('user', JSON.stringify(user));
+				await AsyncStorage.setItem('userToken', users.uid);
+				await AsyncStorage.setItem('user', JSON.stringify(users));
 				setRegister(true);
 
 				Alert.alert(
@@ -107,7 +135,7 @@ const Validate: React.SFC<ValidateProps> = props => {
 						{
 							text: 'ok',
 							onPress: () => {
-								setToken(user.uid, user);
+								setToken(users.uid, user);
 							}
 						}
 					],
@@ -163,7 +191,7 @@ const Validate: React.SFC<ValidateProps> = props => {
 		registerUser();
 	}, [reloadstatus]);
 
-	return <View>{children(isRegister)}</View>;
+	return <View style={{ flex: 1 }}>{children(isRegister)}</View>;
 };
 
 export default Validate;

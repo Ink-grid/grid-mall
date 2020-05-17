@@ -258,7 +258,11 @@ const SignIn: React.SFC<SignInProps> = props => {
 								}
 								style={{ marginBottom: 5 }}>
 								<Icon active name='person'></Icon>
-								<Input {...user} placeholder='Usuario' />
+								<Input
+									{...user}
+									keyboardType='email-address'
+									placeholder='Usuario'
+								/>
 								{error.type &&
 									error.type === ('invalid-email' || 'wrong-password') && (
 										<Icon active name='close-circle' />

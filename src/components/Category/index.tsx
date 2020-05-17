@@ -67,7 +67,7 @@ const Category: React.SFC<CategoryProps> = props => {
 					keyExtractor={(item, index) => index.toString()}
 					renderItem={({ item, index }) => (
 						<PaperImage
-							onPress={() => navigation.jumpTo('detailOrders', item)}
+							onPress={() => navigation.jumpTo('Shoping', item)}
 							uri={item && item.uri}
 							vertical={true}
 							title={item.title}

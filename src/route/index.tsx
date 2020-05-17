@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StoreContext } from '../context/StoreContext';
-import { Root, Spinner, View } from 'native-base';
+import { Root, Spinner, View, Text, Button } from 'native-base';
 import Animated from 'react-native-reanimated';
 import CustomDrawerContent from './CustomDrawerContent';
 
@@ -23,9 +23,21 @@ import {
 	Contracts,
 	Transport
 } from '../views/proveedores';
-import { Platform } from 'react-native';
+
+import {
+	HomeClient,
+	ProductsClient,
+	DashboardClient,
+	OrdersClient,
+	ProfileCliente
+} from '../views/Clients';
+
 import Prueba from '../views/proveedores/Prueba';
 import Usuarios from '../views/Register/Usuarios';
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
+import Shoping from '../views/Clients/Shoping';
+import ConfirOrders from '../views/Clients/ComfirOrders';
 
 // import views
 export interface RouteProps {}
@@ -36,12 +48,31 @@ interface ScreensProps {
 const Drawer = createDrawerNavigator();
 const Stacks = createStackNavigator();
 
+// obtenemos las rutas y los datos del cliente
+const query = gql`
+	query($uid: String!) {
+		getClient(uid: $uid) {
+			razon_social
+			email
+			user {
+				type
+				access {
+					icon
+					name
+					route
+					typeIcon
+				}
+			}
+		}
+	}
+`;
+
 const Route: React.SFC<RouteProps> = () => {
 	const { state } = React.useContext(StoreContext);
 	const [progress, setProgress] = React.useState(new Animated.Value(0));
+	const [isError, setError] = React.useState(true);
 
-	// [*] CREATE ANIMATION FOR SCALE
-
+	// [*] CREATE ANIMATION FOR SCAELE
 	const scale = Animated.interpolate(progress, {
 		inputRange: [0, 1],
 		outputRange: [1, 0.8]
@@ -55,24 +86,93 @@ const Route: React.SFC<RouteProps> = () => {
 
 	const screenStyles = { borderRadius, transform: [{ scale }] };
 
-	const Screens: React.SFC<ScreensProps> = props => (
-		<Animated.View style={[{ flex: 1, overflow: 'hidden' }, props.style]}>
-			<Stacks.Navigator
-				screenOptions={{
-					headerShown: false
-				}}>
-				<Stacks.Screen name='Home' component={Home} />
-				<Stacks.Screen name='Products' component={Products} />
-				<Stacks.Screen name='Profile' component={Profile} />
-				<Stacks.Screen name='Orders' component={Orders} />
-				<Stacks.Screen name='Clients' component={Clients} />
-				<Stacks.Screen name='Contracts' component={Contracts} />
-				<Stacks.Screen name='Transport' component={Transport} />
-				<Stacks.Screen name='Logout' component={Loguot} />
-				<Stacks.Screen name='Prueba' component={Prueba} />
-			</Stacks.Navigator>
-		</Animated.View>
-	);
+	const Screens: React.SFC<ScreensProps> = props => {
+		const { loading, error, data, refetch } = useQuery(query, {
+			variables: { uid: state.userToken }
+		});
+
+		if (error && !loading) {
+			setError(false);
+			return (
+				<View
+					style={{
+						flex: 1,
+						justifyContent: 'center',
+						alignContent: 'center',
+						alignItems: 'center',
+						backgroundColor: '#fff'
+					}}>
+					<Text note>
+						Ocurrio un error inesperado, revise su conexeón a internet.
+					</Text>
+					<Button onPress={() => refetch()}>
+						<Text>Volver a intentar</Text>
+					</Button>
+				</View>
+			);
+		}
+
+		if (loading && !data) {
+			setError(false);
+			return (
+				<View
+					style={{
+						flex: 1,
+						backgroundColor: '#fff',
+						justifyContent: 'center',
+						alignContent: 'center',
+						alignItems: 'center'
+					}}>
+					<Spinner></Spinner>
+				</View>
+			);
+		}
+
+		if (data) {
+			setError(true);
+		}
+		return (
+			<Animated.View style={[{ flex: 1, overflow: 'hidden' }, props.style]}>
+				<Stacks.Navigator
+					screenOptions={{
+						headerShown: false
+					}}
+					initialRouteName='HomeClie'>
+					{/* navigation prooveedore */}
+
+					{getRoute(data.getClient.user.type)}
+				</Stacks.Navigator>
+			</Animated.View>
+		);
+	};
+
+	const getRoute = (type: string) => {
+		switch (type) {
+			case 'clientes':
+				return (
+					<>
+						<Stacks.Screen name='HomeClie' component={HomeClient} />
+						<Stacks.Screen name='OrdersClie' component={OrdersClient} />
+						<Stacks.Screen name='ProductsClie' component={ProductsClient} />
+						<Stacks.Screen name='ProfileClie' component={ProfileCliente} />
+						<Stacks.Screen name='DashboardClie' component={DashboardClient} />
+					</>
+				);
+			default:
+				return (
+					<>
+						<Stacks.Screen name='Home' component={Home} />
+						<Stacks.Screen name='Products' component={Products} />
+						<Stacks.Screen name='Profile' component={Profile} />
+						<Stacks.Screen name='Orders' component={Orders} />
+						<Stacks.Screen name='Clients' component={Clients} />
+						<Stacks.Screen name='Contracts' component={Contracts} />
+						<Stacks.Screen name='Transport' component={Transport} />
+						<Stacks.Screen name='Prueba' component={Prueba} />
+					</>
+				);
+		}
+	};
 
 	if (state.isLoading) {
 		return (
@@ -102,13 +202,39 @@ const Route: React.SFC<RouteProps> = () => {
 						sceneContainerStyle={{ backgroundColor: 'transparent' }}
 						drawerContent={(props: any) => {
 							setProgress(props.progress);
-							return <CustomDrawerContent user={state} {...props} />;
+							return (
+								<CustomDrawerContent
+									query={query}
+									useruid={state.userToken}
+									{...props}
+								/>
+							);
 						}}>
 						{state.userToken !== null ? (
 							<>
-								<Drawer.Screen name='Screens'>
+								<Drawer.Screen
+									name='Screens'
+									options={{ swipeEnabled: isError }}>
 									{() => <Screens style={screenStyles} />}
 								</Drawer.Screen>
+
+								<Drawer.Screen
+									name='Logout'
+									options={{ swipeEnabled: false }}
+									component={Loguot}
+								/>
+
+								<Drawer.Screen
+									name='Shoping'
+									options={{ swipeEnabled: false }}
+									component={Shoping}
+								/>
+
+								<Drawer.Screen
+									name='confirOrders'
+									options={{ swipeEnabled: false }}
+									component={ConfirOrders}
+								/>
 
 								{/* <Drawer.Screen
 									name='Shoping'
