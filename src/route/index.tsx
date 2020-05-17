@@ -39,6 +39,11 @@ import { useQuery } from '@apollo/react-hooks';
 import Shoping from '../views/Clients/Shoping';
 import ConfirOrders from '../views/Clients/ComfirOrders';
 
+//import  home de proveedores, ayuda, perfil, terminos y condiciones
+import AyudaSoporte from '../views/proveedores/Home/ayudaSoporte';
+import TerminosCondiciones from '../views/proveedores/Home/terminosCondiciones/index';
+import Perfil from '../views/proveedores/Home/perfil';
+
 // import views
 export interface RouteProps {}
 interface ScreensProps {
