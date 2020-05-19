@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "911522641682",
+    "firebase_url": "https://inkmark-d4044.firebaseio.com",
+    "project_id": "inkmark-d4044",
+    "storage_bucket": "inkmark-d4044.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911522641682:android:5ef19cf1f539424f9465cb",
+        "android_client_info": {
+          "package_name": "com.inkgrid.inkmarket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911522641682-oso8d2ith1haf8v9f6jm46jiagoqfjb9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAU0sEH52LPNdFNXrcPxpqCvfnUoxeWj4s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911522641682-oso8d2ith1haf8v9f6jm46jiagoqfjb9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "911522641682-7ln1fpnmg18qmabrbrfhtgdsngc86s3f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.inkgrid.inkmarket"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

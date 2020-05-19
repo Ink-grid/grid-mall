@@ -19,7 +19,8 @@ import {
 	AsyncStorage,
 	StatusBar,
 	ImageBackground,
-	Platform
+	Platform,
+	Dimensions
 } from 'react-native';
 
 import { StoreContext } from '../../context/StoreContext';
@@ -35,6 +36,8 @@ interface ErrorCode {
 	type: string | null;
 	status: boolean;
 }
+
+const height = Dimensions.get('screen').height;
 
 const useInputState = (initialValue: string = '') => {
 	const [value, setValue] = React.useState(initialValue);
@@ -52,6 +55,8 @@ const SignIn: React.SFC<SignInProps> = props => {
 		type: null,
 		status: false
 	});
+
+	console.log(height);
 
 	const user = useInputState();
 	const password = useInputState();
@@ -227,12 +232,21 @@ const SignIn: React.SFC<SignInProps> = props => {
 					/>
 					{!isTransparent && (
 						<View
-							style={{
-								height: 400,
-								marginBottom: 30,
-								alignItems: 'center',
-								justifyContent: 'flex-end'
-							}}>
+							style={[
+								height < 550
+									? {
+											height: 300,
+											marginBottom: 2,
+											alignItems: 'center',
+											justifyContent: 'flex-end'
+									  }
+									: {
+											height: 400,
+											marginBottom: 30,
+											alignItems: 'center',
+											justifyContent: 'flex-end'
+									  }
+							]}>
 							<Text style={{ fontSize: 30, fontWeight: 'bold' }}>Grid</Text>
 							<Text
 								style={{
@@ -294,7 +308,7 @@ const SignIn: React.SFC<SignInProps> = props => {
 								style={{ backgroundColor: '#75F075' }}
 								disabled={isLoading ? true : false}
 								onPress={SignInAsync}>
-								<Text>Inicair sesion</Text>
+								<Text>Inicair sesión</Text>
 							</Button>
 						</View>
 						<Text note style={{ textAlign: 'center' }}>
@@ -316,7 +330,7 @@ const SignIn: React.SFC<SignInProps> = props => {
 							}}>
 							<Button onPress={() => navigation.navigate('UserOption')} success>
 								<Text style={{ textTransform: 'lowercase' }}>
-									Crear cuenta de inkmarket
+									Crear cuenta de gridmall
 								</Text>
 							</Button>
 						</View>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>911522641682-7ln1fpnmg18qmabrbrfhtgdsngc86s3f.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.911522641682-7ln1fpnmg18qmabrbrfhtgdsngc86s3f</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCeqBuP9pTDxP5Y03Rqvo5kgLZoZFvd2L0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>911522641682</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.inkgrid.inkmarket</string>
+	<key>PROJECT_ID</key>
+	<string>inkmark-d4044</string>
+	<key>STORAGE_BUCKET</key>
+	<string>inkmark-d4044.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:911522641682:ios:405af4b7f9b3d9419465cb</string>
+	<key>DATABASE_URL</key>
+	<string>https://inkmark-d4044.firebaseio.com</string>
+</dict>
+</plist>
