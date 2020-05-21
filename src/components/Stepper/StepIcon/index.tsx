@@ -1,7 +1,7 @@
 /** @format */
 
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 
 export interface StepIconsProps {
 	stepCount: number;
@@ -35,8 +35,12 @@ export interface StepIconsProps {
 	isCompletedStep?: boolean;
 }
 
+const height = Dimensions.get('screen').height;
+
 const StepIcon: React.SFC<StepIconsProps> = props => {
+	// console.log(height);
 	const {
+		isActiveStep,
 		borderWidth = 3,
 		borderStyle = 'solid',
 		activeStepIconBorderColor = '#4BB543',
@@ -60,6 +64,8 @@ const StepIcon: React.SFC<StepIconsProps> = props => {
 	} = props;
 
 	let styles: any;
+
+	// console.log(isActiveStep);
 
 	if (props.isActiveStep) {
 		styles = {
@@ -184,13 +190,15 @@ const StepIcon: React.SFC<StepIconsProps> = props => {
 				zIndex: 5,
 				top: 23 / 2,
 				left: 10,
-				right: 26 + 8,
+				right: 30 + 8,
 				backgroundColor: disabledStepIconColor,
 				borderTopStyle: borderStyle,
 				borderTopWidth: props.borderWidth,
 				borderTopColor: progressBarColor,
+				marginLeft: 10,
 				marginRight: 36 / 2 + 4,
-				height: 3
+				height: 3,
+				width: 20
 			},
 			rightBar: {
 				position: 'absolute',
@@ -216,18 +224,23 @@ const StepIcon: React.SFC<StepIconsProps> = props => {
 				alignItems: 'center',
 				justifyContent: 'center'
 			}}>
-			<View style={styles.circleStyle}>
-				<Text style={styles.circleText}>
-					{props.isCompletedStep ? (
-						<Text style={{ color: completedCheckColor }}>&#10003;</Text>
-					) : (
-						<Text style={styles.stepNum}>{props.stepNum}</Text>
-					)}
-				</Text>
-			</View>
-			<Text style={styles.labelText}>{props.label}</Text>
-			{!props.isFirstStep && <View style={styles.leftBar} />}
-			{!props.isLastStep && <View style={styles.rightBar} />}
+			{height > 650 && (
+				<>
+					<View style={styles.circleStyle}>
+						<Text style={styles.circleText}>
+							{props.isCompletedStep ? (
+								<Text style={{ color: completedCheckColor }}>&#10003;</Text>
+							) : (
+								<Text style={styles.stepNum}>{props.stepNum}</Text>
+							)}
+						</Text>
+					</View>
+					<Text style={styles.labelText}>{isActiveStep && props.label}</Text>
+
+					{!props.isFirstStep && <View style={styles.leftBar} />}
+					{!props.isLastStep && <View style={styles.rightBar} />}
+				</>
+			)}
 		</View>
 	);
 };
