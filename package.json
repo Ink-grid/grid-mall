@@ -20,6 +20,7 @@
 		"apollo-client": "^2.6.8",
 		"apollo-link-error": "^1.1.13",
 		"apollo-link-http": "^1.5.17",
+		"eva-design": "github:eva-design/eva",
 		"expo": "~37.0.3",
 		"expo-font": "~8.1.0",
 		"expo-linear-gradient": "~8.1.0",
