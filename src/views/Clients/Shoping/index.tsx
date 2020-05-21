@@ -9,7 +9,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   AsyncStorage,
-  Alert,
   BackHandler,
 } from "react-native";
 import Portada from "../../../components/Portada";

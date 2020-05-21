@@ -1,7 +1,7 @@
 /** @format */
 
 import * as React from "react";
-import { View, Text, AsyncStorage, BackHandler, Alert } from "react-native";
+import { AsyncStorage, BackHandler, Alert } from "react-native";
 import { Container } from "native-base";
 import HeaderComponent from "../../../components/Header";
 import Category from "../../../components/Category";
