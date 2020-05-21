@@ -130,7 +130,7 @@ const Validate: React.SFC<ValidateProps> = props => {
 
 				Alert.alert(
 					'Se creo con exito tu cuenta',
-					`Recuerda ingresar con tu usuario: ${email}.`,
+					`Recuerda ingresar con tu usuario: ${email}`,
 					[
 						{
 							text: 'ok',

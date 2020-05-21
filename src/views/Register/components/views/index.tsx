@@ -205,7 +205,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 							frecuencia_compra: frecuencia,
 							tipo_client: userCLient,
 							user: 'MW2jB9fvlqaqg49j3ZQf',
-							lugares_compra: 'Mercado santa anita'
+							lugares_compra: ''
 						}}
 						errors={(type, message, reload) =>
 							getActionsError(type, message, reload!)
@@ -407,9 +407,9 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 										label='Frecuencia de compra'
 										onChangeValue={value => setFrecuenciCompra(value)}
 										items={[
-											{ label: 'Diario', value: '0' },
-											{ label: 'Semanal', value: '1' },
-											{ label: 'Mensual', value: '3' }
+											{ label: 'Diario', value: 'diario' },
+											{ label: 'Semanal', value: 'semanal' },
+											{ label: 'Mensual', value: 'mensual' }
 										]}
 									/>
 								</View>
@@ -433,7 +433,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 						<View style={{ marginTop: marginTop, width: '90%' }}>
 							<View>
 								<Text style={styles.title}>
-									Ingrese las categorias de su interes
+									Ingrese laso categorias de su interes
 								</Text>
 								<Text
 									note
