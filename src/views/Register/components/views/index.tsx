@@ -3,7 +3,6 @@
 import * as React from 'react';
 import useDidUpdate from '../../../../components/useDidUpdate';
 import { View, StyleSheet, Alert, Dimensions } from 'react-native';
-import { IndexPath, Layout, Select, SelectItem } from '@ui-kitten/components';
 import { Text, Item, Label, Input, Icon, Spinner } from 'native-base';
 import Validate from '../validated';
 import Stepper, { ProgressStep } from '../../../../components/Stepper';
@@ -13,6 +12,8 @@ import {
 	SelectComponent,
 	SelectMultipleComponent
 } from '../../../../components/Form/select/indext';
+import CustomList from '../../../../components/CustomList';
+import gql from 'graphql-tag';
 
 type TypeErro = undefined | null | 'minCharacter' | 'Correo' | true;
 
@@ -20,6 +21,15 @@ interface Error {
 	errorType: TypeErro;
 	status: boolean;
 }
+
+const getCategory = gql`
+	{
+		categories {
+			_uid
+			title
+		}
+	}
+`;
 
 export interface RegisterOtionProps {
 	// index: number;
@@ -68,7 +78,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 	const razon = useInputState();
 	// const apellido = useInputState();
 	const telefono = useInputState();
-	const frecuencia_compra = useInputState();
+	//const frecuencia_compra = useInputState();
 	const ruc = useInputState();
 	const password = useInputState();
 	const driection = useInputState();
@@ -140,6 +150,29 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 		}
 	};
 
+	const validarRuc = (rucinput: any): boolean => {
+		const rucValido = (ruc: number): boolean => {
+			if (
+				!(
+					(ruc >= 1e10 && ruc < 11e9) ||
+					(ruc >= 15e9 && ruc < 18e9) ||
+					(ruc >= 2e10 && ruc < 21e9)
+				)
+			)
+				return false;
+			for (var suma = -(ruc % 10 < 2), i = 0; i < 11; i++, ruc = (ruc / 10) | 0)
+				suma += (ruc % 10) * ((i % 7) + ((i / 7) | 0) + 1);
+			return suma % 11 === 0;
+		};
+		//eliminanos los caracteres que no sean validos
+		let ruc = rucinput.replace(/[-.,[\]()\s]+/g, '');
+		if ((ruc = Number(ruc)) && ruc % 1 === 0 && rucValido(Number(ruc))) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+
 	useDidUpdate(() => {
 		if (razon.value.length === 0) {
 			setClose(prevs => ({ ...prevs, name: false }));
@@ -200,7 +233,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 			</ModalComponent>
 			<Stepper>
 				<ProgressStep
-					label='Razon.'
+					label='Razón.'
 					onNext={
 						() => {
 							if (razon.value === '' || razon.value.length < 5) {
@@ -267,7 +300,11 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 				<ProgressStep
 					label='R.U.C'
 					onNext={() => {
-						if (ruc.value === '' || ruc.value.length < 5) {
+						if (
+							ruc.value === '' ||
+							ruc.value.length < 5 ||
+							!validarRuc(ruc.value)
+						) {
 							setError({ status: true, errorType: 'Correo' });
 							return false;
 						} else {
@@ -300,7 +337,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 									<View style={{ marginBottom: 30 }}>
 										<Text style={{ textAlign: 'center', color: 'red' }}>
 											{error.errorType !== 'minCharacter' &&
-												'El R.U.C ingresado es invalido, por favor ingrese un correo valido'}
+												'El R.U.C ingresado es invalido, por favor ingrese un RUC valido'}
 										</Text>
 									</View>
 								)}
@@ -309,7 +346,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 									style={{ width: '95%' }}
 									floatingLabel>
 									<Label>R.U.C</Label>
-									<Input {...ruc} autoFocus={true} />
+									<Input {...ruc} keyboardType='numeric' autoFocus={true} />
 									{isClose.name && (
 										<Icon
 											onPress={() => ruc.onChangeText('')}
@@ -323,7 +360,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 					</View>
 				</ProgressStep>
 				<ProgressStep
-					label='Comp.'
+					label='Compra'
 					onNext={() => {
 						if (ruc.value === '') {
 							setError({ status: true, errorType: 'Correo' });
@@ -366,7 +403,6 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 									//error={error.status}
 									//floatingLabel>
 								>
-									{/* <Label></Label> */}
 									<SelectComponent
 										label='Frecuencia de compra'
 										onChangeValue={value => setFrecuenciCompra(value)}
@@ -376,15 +412,6 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 											{ label: 'Mensual', value: '3' }
 										]}
 									/>
-
-									{/* <Input {...frecuencia_compra} autoFocus={true} />
-									{isClose.name && (
-										<Icon
-											onPress={() => frecuencia_compra.onChangeText(null)}
-											active
-											name='close'
-										/>
-									)} */}
 								</View>
 							</View>
 						</View>
@@ -392,7 +419,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 				</ProgressStep>
 
 				<ProgressStep
-					label='Cate.'
+					label='Categoria'
 					onNext={() => {
 						if (categories.length === 0 || categories === undefined) {
 							setError({ status: true, errorType: 'Correo' });
@@ -437,34 +464,26 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 									//error={error.status}
 									//floatingLabel>
 								>
-									{/* <Label></Label> */}
-									<SelectMultipleComponent
-										data={[
-											{ label: 'Diario', value: '0' },
-											{ label: 'Semanal', value: '1' },
-											{ label: 'Mensual', value: '3' }
-										]}
-										label='Categoria'
-										onChangeValue={data => setCategories(data)}
+									<CustomList
+										query={getCategory}
+										resolve='categories'
+										renderIten={data => {
+											const formatData: any = [];
+											data.forEach((element: any) => {
+												formatData.push({
+													label: element.title,
+													value: element._uid
+												});
+											});
+											return (
+												<SelectMultipleComponent
+													data={formatData}
+													label='Categoria'
+													onChangeValue={data => setCategories(data)}
+												/>
+											);
+										}}
 									/>
-
-									{/* <Select
-										multiSelect={true}
-										selectedIndex={selectedIndexCategorie}
-										onSelect={(index: any) => setSelectedIndexCategorie(index)}>
-										<SelectItem title='Frutas' />
-										<SelectItem title='Verduras' />
-										<SelectItem title='Abarrotes' />
-										<SelectItem title='Otros' />
-									</Select> */}
-									{/* <Input {...frecuencia_compra} autoFocus={true} />
-									{isClose.name && (
-										<Icon
-											onPress={() => frecuencia_compra.onChangeText(null)}
-											active
-											name='close'
-										/>
-									)} */}
 								</View>
 							</View>
 						</View>
@@ -472,7 +491,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 				</ProgressStep>
 
 				<ProgressStep
-					label='Direc.'
+					label='Direccón'
 					onNext={() => {
 						if (driection.value === '' || driection.value.length < 3) {
 							setError({ status: true, errorType: 'Correo' });
@@ -589,7 +608,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 					</View>
 				</ProgressStep>
 				<ProgressStep
-					label='Cel.'
+					label='Celular.'
 					onNext={() => {
 						if (telefono.value === '' || telefono.value.length < 3) {
 							setError({ status: true, errorType: 'Correo' });
@@ -649,7 +668,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 					</View>
 				</ProgressStep>
 				<ProgressStep
-					label='Pass.'
+					label='Password.'
 					onNext={() => {
 						if (!validar_clave(password.value)) {
 							setError({ status: true, errorType: 'Correo' });
@@ -702,7 +721,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = props => {
 				</ProgressStep>
 
 				<ProgressStep
-					label='Confir.'
+					label='Confirmar.'
 					finishBtnText='Registrarte'
 					onSubmit={() => validate()}>
 					<View style={styles.root}>

@@ -113,7 +113,7 @@ const ConfirOrders: React.SFC<ConfirOrdersProps> = props => {
 
 			<SavePedido
 				order={{
-					client: state.user.uid,
+					client: state.userToken!,
 					direction: direction.value,
 					price_total: route.params.precioTotal,
 					quantity_total: route.params.total,

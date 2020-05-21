@@ -27,6 +27,8 @@ const SelectComponent: React.SFC<SelectProps> = props => {
 			label={label}
 			value={items[selectedIndex.row].label}
 			selectedIndex={selectedIndex}
+			placeholder='Selecione un opción'
+			size='large'
 			onSelect={(index: any) => {
 				setSelectedIndex(index);
 				onChangeValue(items[index.row].value);
@@ -75,6 +77,8 @@ const SelectMultipleComponent: React.SFC<selectMultiple> = props => {
 			label={label}
 			multiSelect={true}
 			value={groupDisplayValues.join(', ')}
+			placeholder='Selecione un opción'
+			size='large'
 			selectedIndex={selectedIndex}
 			onSelect={(index: any) => {
 				setSelectedIndex(index);
