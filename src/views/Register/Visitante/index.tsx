@@ -9,30 +9,31 @@ import CustomList from "../../../components/CustomList";
 import gql from "graphql-tag";
 import { ScrollView } from "react-native-gesture-handler";
 
-export interface UsuariosProps {
+export interface VisitanteProps {
   navigation: any;
+  route: any;
 }
 
-type user = {
+type client = {
   _uid: string;
-  type: string;
-  navigate: string;
+  name: string;
+  description: string;
   uri: string;
 };
 
-const getUsers = gql`
+const getClients = gql`
   {
-    getUsers {
+    getTypeClients {
       _uid
-      type
-      navigate
+      name
+      description
       uri
     }
   }
 `;
 
-const Usuarios: React.SFC<UsuariosProps> = (props) => {
-  const { navigation } = props;
+const Visitante: React.SFC<VisitanteProps> = (props) => {
+  const { navigation, route } = props;
   return (
     <Container style={{ backgroundColor: "#fff" }}>
       <HeaderComponent
@@ -44,25 +45,25 @@ const Usuarios: React.SFC<UsuariosProps> = (props) => {
       />
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <CustomList
-          query={getUsers}
-          resolve="getUsers"
-          renderIten={(data: [user], { onRefresh, refreshing }) => (
+          query={getClients}
+          resolve="getTypeClients"
+          renderIten={(data: [client], { onRefresh, refreshing }) => (
             <ScrollView
               style={{ flex: 1 }}
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
             >
-              {data.map((user, index) => (
+              {data.map((client, index) => (
                 <View key={index} style={{ padding: 10, width: "100%" }}>
                   <PaperImage
                     onPress={() =>
-                      navigation.navigate(user.navigate, { uid: user._uid })
+                      navigation.navigate("Register", { uid: client._uid })
                     }
                     vertical
-                    //description={client.description}
-                    title={user.type}
-                    uri={user.uri}
+                    description={client.description}
+                    title={client.name}
+                    uri={client.uri}
                   ></PaperImage>
                 </View>
               ))}
@@ -74,4 +75,4 @@ const Usuarios: React.SFC<UsuariosProps> = (props) => {
   );
 };
 
-export default Usuarios;
+export default Visitante;

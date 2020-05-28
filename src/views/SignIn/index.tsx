@@ -167,12 +167,12 @@ const SignIn: React.SFC<SignInProps> = (props) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log("focus singIng");
+      // console.log("focus singIng");
       setError({ type: null, status: false });
       Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
       Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
       return () => {
-        console.log("no focus singIng");
+        // console.log("no focus singIng");
         setError({ type: null, status: false });
         Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
         Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);

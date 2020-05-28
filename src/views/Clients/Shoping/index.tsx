@@ -17,10 +17,12 @@ import { useFocusEffect } from "@react-navigation/core";
 import gql from "graphql-tag";
 import CustomList from "../../../components/CustomList";
 import Carousel from "../../../components/Carousel";
-import ShopingCard from "../../../components/ShopingCard";
+//import ShopingCard from "../../../components/ShopingCard";
 import CardItems from "../../../components/ListItens/component/CardItems";
 import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ShopingList from "../../../components/ShopingList";
+import { StoreContext } from "../../../context/StoreContext";
 
 export interface ShopingProps {
   navigation: any;
@@ -62,19 +64,24 @@ const getCategoria = gql`
 
 const Shoping: React.SFC<ShopingProps> = (props) => {
   const { navigation, route } = props;
-  const [count, setCount] = React.useState(0);
+
+  const { actions } = React.useContext(StoreContext);
+
   const [categoty, setCategory] = React.useState<
     undefined | { uid: string; title: string }
   >();
 
   const [pedido, setPedido] = React.useState<any>();
+  const [count, setCount] = React.useState(0);
   const isDrawerOpen = useIsDrawerOpen();
   const [searText, setText] = React.useState("");
-
+  //const [dataFilter, setData] = React.useState<any[]>();
+  //console.log(pedido);
   //console.log("pedido en shoping", pedido);
 
   const savePedido = async () => {
     await AsyncStorage.setItem("pedido", JSON.stringify(pedido));
+    actions.setReaload(Math.random());
     //return false;
   };
 
@@ -163,12 +170,12 @@ const Shoping: React.SFC<ShopingProps> = (props) => {
             after: null,
           }}
           renderIten={(data) => (
-            <ShopingCard
-              search={searText}
+            <ShopingList
               data={data}
-              renderItems={(product, pedido, count, onSave, remove) => {
+              search={searText}
+              renderItems={(product, pedidos, count, onSave, onRemove) => {
                 setCount(count);
-                setPedido(pedido);
+                setPedido(pedidos);
                 return (
                   <SafeAreaView style={{ flex: 1, marginTop: 20 }}>
                     <FlatList
@@ -183,44 +190,41 @@ const Shoping: React.SFC<ShopingProps> = (props) => {
                             <Text>LOADING...</Text>
                           </View>
                         ) : (
-                          <CardItems item={item}>
-                            {(item) => (
-                              <>
-                                <Button
-                                  onPress={() => {
-                                    remove!(item.sku);
-                                    if (item.observers <= 0) {
+                          <>
+                            <CardItems item={item}>
+                              {(item) => (
+                                <>
+                                  <Button
+                                    small
+                                    style={{
+                                      backgroundColor: "#77A765",
+                                      borderColor: "#77A765",
+                                    }}
+                                    onPress={() => {
+                                      onRemove!(item.sku);
                                       item.observers = 0;
-                                      return;
-                                    }
-                                    item.observers -= 1;
-                                  }}
-                                  small
-                                  style={{
-                                    backgroundColor: "#77A765",
-                                    borderColor: "#77A765",
-                                  }}
-                                >
-                                  <Icon type="Ionicons" name="md-remove" />
-                                </Button>
-                                <Text>{item.observers} kg </Text>
-
-                                <Button
-                                  onPress={() => {
-                                    item.observers += 1;
-                                    onSave(item.sku);
-                                  }}
-                                  small
-                                  style={{
-                                    backgroundColor: "#77A765",
-                                    borderColor: "#77A765",
-                                  }}
-                                >
-                                  <Icon type="Ionicons" name="ios-add" />
-                                </Button>
-                              </>
-                            )}
-                          </CardItems>
+                                    }}
+                                  >
+                                    <Icon type="Ionicons" name="md-remove" />
+                                  </Button>
+                                  <Text>{item.observers} kg</Text>
+                                  <Button
+                                    onPress={() => {
+                                      onSave(item.sku);
+                                      item.observers = 1;
+                                    }}
+                                    small
+                                    style={{
+                                      backgroundColor: "#77A765",
+                                      borderColor: "#77A765",
+                                    }}
+                                  >
+                                    <Icon type="Ionicons" name="ios-add" />
+                                  </Button>
+                                </>
+                              )}
+                            </CardItems>
+                          </>
                         )
                       }
                     />
