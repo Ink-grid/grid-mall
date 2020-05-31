@@ -1,9 +1,10 @@
 /** @format */
 
-import * as React from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import { View, Text, Spinner, Button } from 'native-base';
-import { StyleSheet } from 'react-native';
+import * as React from "react";
+import { useQuery } from "@apollo/react-hooks";
+import { View, Text, Spinner, Button } from "native-base";
+import { StyleSheet } from "react-native";
+//import useDidUpdate from "../useDidUpdate";
 // import CustomButtons from '../CustomButton';
 // import styles from '../../styles';
 // import { CircularProgress } from '@material-ui/core';
@@ -64,120 +65,133 @@ import { StyleSheet } from 'react-native';
 // `;
 
 export interface CustomListProps {
-	query: any;
-	renderIten: (
-		data: any,
-		refresh: { onRefresh: () => void; refreshing: boolean },
-		deletedItems: (value: any) => Promise<void>
-	) => React.ReactChild;
-	resolve: string;
-	isError?: (state: boolean, reload?: (value?: any) => Promise<any>) => void;
-	resolveDeleted?: string;
-	deletedAction?: (value: any) => Promise<any>;
-	variables?: any;
+  query: any;
+  renderIten: (
+    data: any,
+    refresh: { onRefresh: () => void; refreshing: boolean },
+    deletedItems?: (value: any) => Promise<void>
+  ) => React.ReactChild;
+  resolve: string;
+  update?: any;
+  isError?: (state: boolean, reload?: (value?: any) => Promise<any>) => void;
+  resolveDeleted?: string;
+  deletedAction?: (value: any) => Promise<any>;
+  variables?: any;
 }
 
-const CustomList: React.SFC<CustomListProps> = props => {
-	//const classes = styles();
-	const {
-		query,
-		renderIten,
-		variables,
-		resolve,
-		deletedAction,
-		resolveDeleted,
-		isError
-	} = props;
-	const { loading, error, data, refetch } = useQuery(query, {
-		variables: variables
-	});
+const CustomList: React.SFC<CustomListProps> = (props) => {
+  //const classes = styles();
+  const {
+    query,
+    renderIten,
+    variables,
+    update = null,
+    resolve,
+    deletedAction,
+    resolveDeleted,
+    isError,
+  } = props;
+  const { loading, error, data, refetch } = useQuery(query, {
+    variables: update || variables,
+  });
 
-	const [refreshing, setRefreshing] = React.useState(false);
+  console.log("data desde custom list", data);
 
-	//[*] async function for update items
-	const refreshingAsync = async () => {
-		await refetch();
-	};
+  const [refreshing, setRefreshing] = React.useState(false);
 
-	const onRefresh = React.useCallback(() => {
-		setRefreshing(true);
-		refreshingAsync();
-		//setRefreshAction(Math.random());
-		setRefreshing(false);
-	}, [refreshing]);
+  //   const refreshVariablesAsync = async (value: any) => {
+  //     console.log(value);
+  //     await refetch({ variables: value });
+  //   };
 
-	// [*] deleted items  async by uid
-	const deletedItems = async (value: any) => {
-		try {
-			//const [startMutation] = useMutation(deletedquery);
-			let response = await deletedAction!(value);
-			console.log(response);
-			if (resolveDeleted) {
-				if (response.data[resolveDeleted]) {
-					isError!(true, refetch);
-				} else {
-					isError!(false);
-				}
-			}
-		} catch (error) {
-			console.log(error);
-			isError!(true);
-		}
-	};
+  //[*] async function for update items
+  const refreshingAsync = async () => {
+    await refetch();
+  };
 
-	if (error) {
-		return (
-			<View style={{ height: 380, marginTop: 10 }}>
-				<View>
-					<Text note style={{ textAlign: 'center', fontWeight: 'bold' }}>
-						Ocorrio un error inesperado, por favor verifique su conexión a
-						internet
-					</Text>
-					<View style={styles.center}>
-						<Button style={{ width: '50%' }} onPress={() => refetch()}>
-							<Text>Volver a intentar </Text>
-						</Button>
-					</View>
-				</View>
-			</View>
-		);
-	}
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    refreshingAsync();
+    //setRefreshAction(Math.random());
+    setRefreshing(false);
+  }, [refreshing]);
 
-	if (loading && !error) {
-		return (
-			<View style={{ flex: 1, marginTop: 30 }}>
-				<Spinner />
-			</View>
-		);
-	}
+  // [*] deleted items  async by uid
+  const deletedItems = async (value: any) => {
+    try {
+      //const [startMutation] = useMutation(deletedquery);
+      let response = await deletedAction!(value);
+      console.log(response);
+      if (resolveDeleted) {
+        if (response.data[resolveDeleted]) {
+          isError!(true, refetch);
+        } else {
+          isError!(false);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      isError!(true);
+    }
+  };
 
-	if (data && data[resolve].length === 0) {
-		return (
-			<View style={{ marginTop: 30 }}>
-				<Text style={{ textAlign: 'center', width: '100%' }} note>
-					No se econtro ningún resultado para esta consulta.
-				</Text>
-			</View>
-		);
-	}
+  //   useDidUpdate(() => {
+  //     if (update) refreshVariablesAsync(update);
+  //   }, [update]);
 
-	return (
-		<View style={{ flex: 1, padding: 10 }}>
-			{renderIten(
-				data[resolve],
-				{ onRefresh: onRefresh, refreshing: refreshing },
-				deletedItems
-			)}
-		</View>
-	);
+  if (error) {
+    return (
+      <View style={{ height: 380, marginTop: 10 }}>
+        <View>
+          <Text note style={{ textAlign: "center", fontWeight: "bold" }}>
+            Ocorrio un error inesperado, por favor verifique su conexión a
+            internet
+          </Text>
+          <View style={styles.center}>
+            <Button style={{ width: "50%" }} onPress={() => refetch()}>
+              <Text>Volver a intentar </Text>
+            </Button>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  if (loading && !error) {
+    return (
+      <View style={{ flex: 1, marginTop: 30 }}>
+        <Spinner />
+      </View>
+    );
+  }
+
+  if (data && data[resolve].length === 0) {
+    return (
+      <View style={{ marginTop: 30 }}>
+        <Text style={{ textAlign: "center", width: "100%" }} note>
+          No se econtro ningún resultado para esta consulta.
+        </Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={{ flex: 1, padding: 10 }}>
+      {renderIten(
+        data[resolve],
+        { onRefresh: onRefresh, refreshing: refreshing },
+        deletedItems
+      )}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-	center: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		alignContent: 'center'
-	}
+  center: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+  },
 });
 
 export default CustomList;
