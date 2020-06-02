@@ -9,7 +9,6 @@ import {
   Button,
   Input,
   Icon,
-  Toast,
   Container,
   Spinner,
 } from "native-base";
@@ -18,6 +17,7 @@ import {
   Keyboard,
   AsyncStorage,
   StatusBar,
+  ToastAndroid,
   ImageBackground,
   Platform,
   Dimensions,
@@ -25,8 +25,11 @@ import {
 
 import { StoreContext } from "../../context/StoreContext";
 import { auth } from "../../utils/firebase";
-import useDidUpdate from "../../components/useDidUpdate";
 import { useFocusEffect } from "@react-navigation/core";
+import {
+  useDidErrorEmail,
+  useDidPasswordLogin,
+} from "../Register/components/Hooks";
 
 export interface SignInProps {
   navigation: any;
@@ -51,35 +54,28 @@ const SignIn: React.SFC<SignInProps> = (props) => {
   const [isLoading, setLoading] = React.useState(false);
   const [isSecutiry, setSecurity] = React.useState(true);
 
-  const [error, setError] = React.useState<ErrorCode>({
-    type: null,
-    status: false,
-  });
-
   const user = useInputState();
   const password = useInputState();
+  const errorUser = useDidErrorEmail(user.value);
+  const errorPassword = useDidPasswordLogin(password.value);
 
   const SignInAsync = async () => {
-    if (user.value.length === 0) {
-      setError({ type: "invalid-email", status: true });
-      return;
-    }
-    if (password.value.length === 0) {
-      setError({ type: "isMin", status: true });
-      return;
-    }
     setLoading(true);
     try {
       const response = await auth().signInWithEmailAndPassword(
         user.value.replace(/" "/gi, ""),
         password.value.replace(/" "/gi, "")
       );
-
       if (response.user) {
         await AsyncStorage.setItem("user", JSON.stringify(response.user));
+        await AsyncStorage.setItem(
+          "accessToken",
+          JSON.stringify(response.user.displayName)
+        );
         await AsyncStorage.setItem("userToken", response.user.uid);
         setLoading(false);
         actions.signIn(response.user.uid);
+        actions.setAccessToken(response.user.displayName);
         actions.setUser(response.user);
       } else {
         setLoading(false);
@@ -88,49 +84,54 @@ const SignIn: React.SFC<SignInProps> = (props) => {
     } catch (error) {
       switch (error.code) {
         case "auth/invalid-email":
-          setError({ type: "invalid-email", status: true });
+          console.log(error);
           setLoading(false);
-          Toast.show({
-            buttonText: "ok",
-            buttonTextStyle: { color: "#008000" },
-            text: "La dirección de correo electrónico está mal formateada.",
-            duration: 4000,
-          });
+          ToastAndroid.showWithGravity(
+            "La dirección de correo electrónico está mal formateada.",
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM
+          );
           //alert('La dirección de correo electrónico está mal formateada.');
           break;
         case "auth/wrong-password":
-          setError({ type: "wrong-password", status: true });
           setLoading(false);
-
-          Toast.show({
-            buttonTextStyle: { color: "#008000" },
-            text:
-              "La contraseña no es válida o el usuario no tiene una contraseña.",
-            buttonText: "ok",
-            duration: 3000,
-          });
+          console.log(error);
+          ToastAndroid.showWithGravity(
+            "La contraseña no es válida o el usuario no tiene una contraseña.",
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM
+          );
           break;
 
         case "auth/too-many-requests":
+          console.log(error);
           setLoading(false);
-          setError({ type: "too-many-requests", status: true });
-          Toast.show({
-            buttonTextStyle: { color: "#008000" },
-            text:
-              "Demasiados intentos de inicio de sesión fallidos. Por favor, inténtelo de nuevo más tarde.",
-            buttonText: "ok",
-            duration: 3000,
-          });
+          ToastAndroid.showWithGravity(
+            "Demasiados intentos de inicio de sesión fallidos. Por favor, inténtelo de nuevo más tarde.",
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM
+          );
           break;
 
-        default:
+        case "auth/user-not-found":
           setLoading(false);
-          Toast.show({
-            buttonTextStyle: { color: "#008000" },
-            text: error.message,
-            buttonText: "ok",
-            duration: 3000,
-          });
+          // setError({ type: "user-not-found", status: true });
+          //
+          ToastAndroid.showWithGravity(
+            "EL usuario no existe o esta mal escrito",
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM
+          );
+
+          break;
+        default:
+          console.log(error);
+          setLoading(false);
+          ToastAndroid.showWithGravity(
+            error.message,
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM
+          );
           break;
       }
     }
@@ -144,36 +145,13 @@ const SignIn: React.SFC<SignInProps> = (props) => {
     setTransparent(true);
   };
 
-  useDidUpdate(() => {
-    if (user.value.length > 0 || password.value.length > 4) {
-      setError({
-        type: null,
-        status: false,
-      });
-    }
-    if (user.value.length === 0) {
-      setError({
-        type: "invalid-email",
-        status: true,
-      });
-    }
-    if (password.value.length < 4) {
-      setError({
-        type: "isMin",
-        status: true,
-      });
-    }
-  }, [user.value, password.value]);
-
   useFocusEffect(
     React.useCallback(() => {
       // console.log("focus singIng");
-      setError({ type: null, status: false });
       Keyboard.addListener("keyboardDidShow", _keyboardDidShow);
       Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
       return () => {
         // console.log("no focus singIng");
-        setError({ type: null, status: false });
         Keyboard.removeListener("keyboardDidShow", _keyboardDidShow);
         Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
       };
@@ -266,31 +244,20 @@ const SignIn: React.SFC<SignInProps> = (props) => {
             <Form style={{ padding: 10 }}>
               <Item
                 rounded
-                error={
-                  error.type &&
-                  error.type === ("invalid-email" || "wrong-password")
-                    ? true
-                    : false
-                }
+                error={errorUser.status !== null ? !errorUser.status : false}
                 style={{ marginBottom: 5 }}
               >
                 <Icon active name="person"></Icon>
                 <Input
                   {...user}
                   keyboardType="email-address"
-                  placeholder="Usuario"
+                  placeholder="Correo"
                 />
-                {error.type &&
-                  error.type === ("invalid-email" || "wrong-password") && (
-                    <Icon active name="close-circle" />
-                  )}
               </Item>
               <Item
                 rounded
                 error={
-                  error.type && error.type === ("isMin" || "wrong-password")
-                    ? true
-                    : false
+                  errorPassword.status !== null ? !errorPassword.status : false
                 }
               >
                 <Icon active name="navigate" />
@@ -309,8 +276,14 @@ const SignIn: React.SFC<SignInProps> = (props) => {
             <View style={{ padding: 10 }}>
               <Button
                 block
-                style={{ backgroundColor: "#75F075" }}
-                disabled={isLoading ? true : false}
+                style={[
+                  !errorPassword.status || !errorUser.status
+                    ? { backgroundColor: "gray" }
+                    : { backgroundColor: "#75F075" },
+                ]}
+                disabled={
+                  !errorPassword.status || !errorUser.status ? true : false
+                }
                 onPress={SignInAsync}
               >
                 <Text>Inicair sesión</Text>

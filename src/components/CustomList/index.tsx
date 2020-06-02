@@ -176,7 +176,7 @@ const CustomList: React.SFC<CustomListProps> = (props) => {
   }
 
   return (
-    <View style={{ flex: 1, padding: 10 }}>
+    <View style={{ flex: 1, paddingTop: 10 }}>
       {renderIten(
         data[resolve],
         { onRefresh: onRefresh, refreshing: refreshing },

@@ -217,7 +217,7 @@ const Products: React.SFC<ProductsProps> = (props) => {
                                     >
                                       <Icon type="Ionicons" name="md-remove" />
                                     </Button>
-                                    <Text>{item.observers}</Text>
+                                    {/* <Text>{item.observers}</Text> */}
                                     <Button
                                       onPress={() => {
                                         onSave(item.sku);

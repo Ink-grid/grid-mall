@@ -60,6 +60,8 @@ const CustomDrawerContent: React.SFC<CustomDrawerContentProps> = (props) => {
     );
   }
 
+  // console.log(data);
+
   return (
     <>
       <View style={styles.profile}>

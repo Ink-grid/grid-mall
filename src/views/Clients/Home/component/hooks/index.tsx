@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useDidUpdate from "../../../../../components/useDidUpdate";
+import { ToastAndroid } from "react-native";
 
 type product =
   | {
@@ -22,6 +23,10 @@ const usePedidoPer = (product: product) => {
     total: 0,
   });
 
+  const handleClearProduct = () => {
+    setPedido({ products: [], total: 0 });
+  };
+
   const handleAddProduct = (product: product) => {
     if (!product) return null;
     if (
@@ -32,7 +37,11 @@ const usePedidoPer = (product: product) => {
       return null;
     let isProduct = peido?.products.find((pro) => pro!.name === product.name);
     if (isProduct) {
-      alert("ya existe el producto");
+      ToastAndroid.showWithGravity(
+        "ya existe el producto",
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM
+      );
     } else {
       setPedido((presv) => {
         if (presv.products.length === 0) {
@@ -59,7 +68,7 @@ const usePedidoPer = (product: product) => {
     handleAddProduct(product);
   }, [product]);
 
-  return { peido, handleDeletesProduct };
+  return { peido, handleDeletesProduct, handleClearProduct };
 };
 
 export { usePedidoPer };

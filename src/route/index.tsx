@@ -36,11 +36,17 @@ import Prueba from "../views/proveedores/Prueba";
 import Usuarios from "../views/Register/Usuarios";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
-import Shoping from "../views/Clients/Shoping";
+//import Shoping from "../views/Clients/Shoping";
 import ConfirOrders from "../views/Clients/ComfirOrders";
 import SetPagos from "../views/Pagos";
 import Visitante from "../views/Register/Visitante";
 import RegsiterClient from "../views/Register/Visitante/Register";
+//import ProveedorViews from "../views/Register/Proveedor/ResisterViews";
+import Proveedor from "../views/Register/Proveedor";
+import Logistica from "../views/Register/Logistica";
+import LogisticaRegister from "../views/Register/Logistica/RegisterLogistica";
+import Pedido from "../views/Clients/Pedido";
+import ComfirPagoStripe from "../views/ComfirOrders";
 
 //import  home de proveedores, ayuda, perfil, terminos y condiciones
 // import AyudaSoporte from '../views/proveedores/Home/ayudaSoporte';
@@ -76,6 +82,7 @@ const query = gql`
 
 const Route: React.SFC<RouteProps> = () => {
   const { state } = React.useContext(StoreContext);
+  console.log(state);
   const [progress, setProgress] = React.useState(new Animated.Value(0));
   const [isError, setError] = React.useState(true);
 
@@ -159,7 +166,10 @@ const Route: React.SFC<RouteProps> = () => {
     );
   };
 
+  // console.log(state);
+
   const getRoute = (type: string | null) => {
+    console.log("route", type);
     switch (type) {
       case "MW2jB9fvlqaqg49j3ZQf":
         return (
@@ -169,6 +179,7 @@ const Route: React.SFC<RouteProps> = () => {
             {/* <Stacks.Screen name="ProductsClie" component={ProductsClient} /> */}
             <Stacks.Screen name="ProfileClie" component={ProfileCliente} />
             <Stacks.Screen name="DashboardClie" component={DashboardClient} />
+            <Stacks.Screen name="ConfirmarPedido" component={Pedido} />
           </>
         );
       default:
@@ -194,6 +205,8 @@ const Route: React.SFC<RouteProps> = () => {
       </View>
     );
   }
+
+  // console.log("state", state);
   return (
     <Root>
       <LinearGradient style={{ flex: 1 }} colors={["#75F075", "#1C3A1C"]}>
@@ -203,7 +216,6 @@ const Route: React.SFC<RouteProps> = () => {
             overlayColor="transparent"
             drawerStyle={{ width: "50%", backgroundColor: "transparent" }}
             //contentContainerStyle={{ flex: 1 }}
-
             drawerContentOptions={{
               activeBackgroundColor: "transparent",
               activeTintColor: "green",
@@ -235,6 +247,24 @@ const Route: React.SFC<RouteProps> = () => {
                 </Drawer.Screen>
 
                 <Drawer.Screen
+                  name="ScreensNoswipe"
+                  options={{ swipeEnabled: false, unmountOnBlur: true }}
+                >
+                  {() => (
+                    <Stacks.Navigator
+                      screenOptions={{
+                        headerShown: false,
+                      }}
+                    >
+                      <Stacks.Screen
+                        name="ConfirmarPagoStripe"
+                        component={ComfirPagoStripe}
+                      />
+                    </Stacks.Navigator>
+                  )}
+                </Drawer.Screen>
+
+                <Drawer.Screen
                   name="Logout"
                   options={{ swipeEnabled: false }}
                   component={Loguot}
@@ -263,6 +293,12 @@ const Route: React.SFC<RouteProps> = () => {
                   component={SetPagos}
                   options={{ swipeEnabled: false }}
                 />
+
+                {/* <Drawer.Screen
+                  name="ConfirmarPagoStripe"
+                  component={ComfirPagoStripe}
+                  options={{ swipeEnabled: false }}
+                /> */}
 
                 {/* <Drawer.Screen
 									name='Shoping'
@@ -299,6 +335,24 @@ const Route: React.SFC<RouteProps> = () => {
                 <Drawer.Screen
                   name="RegisterCLient"
                   component={RegsiterClient}
+                  options={{ swipeEnabled: false }}
+                />
+
+                <Drawer.Screen
+                  name="RegisterLogistica"
+                  component={LogisticaRegister}
+                  options={{ swipeEnabled: false }}
+                />
+
+                <Drawer.Screen
+                  name="Proveedor"
+                  component={Proveedor}
+                  options={{ swipeEnabled: false }}
+                />
+
+                <Drawer.Screen
+                  name="Logistica"
+                  component={Logistica}
                   options={{ swipeEnabled: false }}
                 />
                 {/* <Drawer.Screen

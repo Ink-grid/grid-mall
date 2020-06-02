@@ -3,57 +3,49 @@
 import * as React from "react";
 import { View, StyleSheet, Alert, Dimensions } from "react-native";
 import { Text, Item, Label, Input, Icon, Spinner } from "native-base";
-import Validate from "../validated";
 import Stepper, { ProgressStep } from "../../../../components/Stepper";
 import ModalComponent from "../../../../components/Modal";
-import {
-  SelectComponent,
-  SelectMultipleComponent,
-} from "../../../../components/Form/select/indext";
-import CustomList from "../../../../components/CustomList";
-import gql from "graphql-tag";
+// import { SelectMultipleComponent } from "../../../../components/Form/select/indext";
+// import CustomList from "../../../../components/CustomList";
+// import gql from "graphql-tag";
 import {
   useDidError,
   useDidErrorRuc,
   useDidErrorEmail,
   useDidErrorPhone,
   useDidPassword,
-} from "../Hooks/index";
-import ValidatedRegister from "../ValidateRegister";
+} from "../../components/Hooks";
+import gql from "graphql-tag";
+import ValidatedRegister from "../../components/ValidateRegister";
+// import ValidateProvider from "../ValidatedRegister";
 
-const getCategory = gql`
-  {
-    categories {
-      _uid
-      title
-    }
-  }
-`;
+// const getCategory = gql`
+//   {
+//     categories {
+//       _uid
+//       title
+//     }
+//   }
+// `;
 
-const CREATE_VISITANTE = gql`
-  mutation CreateClient(
+const CREATE_LOGISTICA = gql`
+  mutation CreateLogistica(
     $uid: String!
     $razon_social: String!
-    $tipo_client: String!
     $user: String!
     $ruc: String!
-    $frecuencia_compra: String!
-    $categories: [String]!
-    $lugares_compra: String!
+    $tipo_client: String!
     $phone: String!
     $email: String!
     $direction: String!
   ) {
-    createClient(
+    createLogistica(
       input: {
         uid: $uid
         razon_social: $razon_social
-        tipo_client: $tipo_client
         user: $user
         ruc: $ruc
-        frecuencia_compra: $frecuencia_compra
-        categories: $categories
-        lugares_compra: $lugares_compra
+        tipo_client: $tipo_client
         phone: $phone
         email: $email
         direction: $direction
@@ -62,19 +54,20 @@ const CREATE_VISITANTE = gql`
   }
 `;
 
-export interface RegisterOtionProps {
-  userCLient: string;
-  onSubmit?: () => Promise<void>;
+export interface LogisticaOtionProps {
+  //userCLient: string;
+  //onSubmit?: () => Promise<void>;
+  uidClient: string;
   marginTop?: number;
 }
 
 const height = Dimensions.get("screen").height;
 
-const RegisterViews: React.SFC<RegisterOtionProps> = (props) => {
-  const { marginTop, userCLient } = props;
+const LogisticaViews: React.SFC<LogisticaOtionProps> = (props) => {
+  const { marginTop = 15, uidClient } = props;
 
-  const [frecuencia, setFrecuenciCompra] = React.useState("");
-  const [categories, setCategories] = React.useState<string[]>([]);
+  // const [frecuencia, setFrecuenciCompra] = React.useState("");
+  // const [categories, setCategories] = React.useState<string[]>([]);
 
   const useInputState = (initialValue: string = "") => {
     const [value, setValue] = React.useState<any>(initialValue);
@@ -100,7 +93,6 @@ const RegisterViews: React.SFC<RegisterOtionProps> = (props) => {
 
   const razonNameError = useDidError(razon.value);
   const rucError = useDidErrorRuc(ruc.value);
-  const categoriaError = useDidError(categories);
   const directionError = useDidError(driection.value);
   const emailError = useDidErrorEmail(correo.value);
   const phoneError = useDidErrorPhone(telefono.value);
@@ -161,7 +153,6 @@ const RegisterViews: React.SFC<RegisterOtionProps> = (props) => {
         break;
     }
   };
-
   return (
     <>
       <ModalComponent
@@ -176,19 +167,16 @@ const RegisterViews: React.SFC<RegisterOtionProps> = (props) => {
           }}
         >
           <ValidatedRegister
-            query={CREATE_VISITANTE}
+            query={CREATE_LOGISTICA}
             password={password.value}
             data={{
               razon_social: razon.value,
               ruc: ruc.value,
+              tipo_client: uidClient,
               direction: driection.value,
               email: correo.value,
               phone: telefono.value,
-              categories: categories,
-              frecuencia_compra: frecuencia,
-              tipo_client: userCLient,
-              user: "MW2jB9fvlqaqg49j3ZQf",
-              lugares_compra: "",
+              user: "TMEOHyqNQnuZKuVdoLa2",
             }}
             errors={(type, message, reload) =>
               getActionsError(type, message, reload!)
@@ -218,43 +206,39 @@ const RegisterViews: React.SFC<RegisterOtionProps> = (props) => {
       </ModalComponent>
       <Stepper>
         <ProgressStep
-          label="Razón."
+          label="Datos"
           onNext={() =>
-            razonNameError.status !== null ? razonNameError.status : false
+            razonNameError.status !== null &&
+            emailError !== null &&
+            phoneError.status !== null
+              ? razonNameError.status && emailError.status && phoneError.status
+                ? true
+                : false
+              : false
           }
           previousBtnStyle={{ color: "#75F075" }}
         >
           <View style={styles.root}>
-            <View style={{ marginTop: marginTop, width: "90%" }}>
-              <View>
-                <Text style={styles.title}>¿Cual es tu Razón social?</Text>
-                <Text
-                  note
-                  style={{
-                    textAlign: "center",
-                    marginTop: 15,
-                    marginBottom: 15,
-                  }}
-                >
-                  Ingresa su Razón social.
+            <View style={{ width: "90%" }}>
+              <View
+                style={{
+                  justifyContent: "center",
+                  width: "100%",
+                  flexDirection: "row",
+                }}
+              >
+                <Text style={[styles.title, { width: "80%" }]}>
+                  Por favor ingrese sus datos personales.
                 </Text>
               </View>
               <View
                 style={{
-                  marginTop: 5,
+                  marginTop: 20,
                   width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  //justifyContent: "center",
+                  //alignItems: "center",
                 }}
               >
-                <View style={{ marginBottom: 15, marginTop: -10 }}>
-                  <Text
-                    note
-                    style={{ textAlign: "center", fontSize: 12, color: "red" }}
-                  >
-                    {razonNameError.show && "Ingrese su razón social completo"}
-                  </Text>
-                </View>
                 <Item
                   style={{
                     width: "95%",
@@ -267,7 +251,7 @@ const RegisterViews: React.SFC<RegisterOtionProps> = (props) => {
                   floatingLabel
                 >
                   <Label>Razon Social</Label>
-                  <Input {...razon} autoFocus={true} />
+                  <Input {...razon} />
                   {razonNameError.status && (
                     <Icon
                       onPress={() => razon.onChangeText("")}
@@ -276,6 +260,64 @@ const RegisterViews: React.SFC<RegisterOtionProps> = (props) => {
                     />
                   )}
                 </Item>
+                <View style={{ marginBottom: 2, marginTop: 5 }}>
+                  <Text note style={{ fontSize: 10, color: "red" }}>
+                    {razonNameError.show && "Ingrese su razón social completo"}
+                  </Text>
+                </View>
+
+                <Item
+                  error={
+                    emailError.status !== null ? !emailError.status : false
+                  }
+                  style={{ width: "95%", marginTop: 10 }}
+                  floatingLabel
+                >
+                  <Label>Correo electronico</Label>
+                  <Input {...correo} keyboardType="email-address" />
+                  {emailError.status && (
+                    <Icon
+                      onPress={() => correo.onChangeText("")}
+                      active
+                      name="close"
+                    />
+                  )}
+                </Item>
+                <View style={{ marginTop: 5 }}>
+                  <Text
+                    style={{
+                      textAlign: "left",
+                      color: "red",
+                      fontSize: 10,
+                      width: "100%",
+                    }}
+                  >
+                    {emailError.show && "Ingrese un correo valido"}
+                  </Text>
+                </View>
+
+                <Item
+                  style={{ width: "95%", marginTop: 10 }}
+                  error={
+                    phoneError.status !== null ? !phoneError.status : false
+                  }
+                  floatingLabel
+                >
+                  <Label>Número de celular</Label>
+                  <Input {...telefono} keyboardType="phone-pad" />
+                  {phoneError.status && (
+                    <Icon
+                      onPress={() => telefono.onChangeText(null)}
+                      active
+                      name="close"
+                    />
+                  )}
+                </Item>
+                <View style={{ marginBottom: 10, marginTop: 5 }}>
+                  <Text note style={{ color: "red", fontSize: 10 }}>
+                    {phoneError.show && "Ingrese un número de celular válido"}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
@@ -336,86 +378,6 @@ const RegisterViews: React.SFC<RegisterOtionProps> = (props) => {
             </View>
           </View>
         </ProgressStep>
-        <ProgressStep
-          label="Compra"
-          onNext={() =>
-            categoriaError.status !== null ? categoriaError.status : false
-          }
-        >
-          <View style={styles.root}>
-            <View style={{ marginTop: marginTop, width: "90%" }}>
-              <View>
-                <Text style={styles.title}>
-                  Frecuencia de compra y Categoria
-                </Text>
-                <Text
-                  note
-                  style={{
-                    textAlign: "center",
-                    marginTop: 15,
-                    marginBottom: 10,
-                  }}
-                >
-                  ¡Ingrese la frecuencia de compra y las categorias que desea
-                  comprar!!
-                </Text>
-              </View>
-              <View
-                style={{
-                  marginTop: 10,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View style={{ marginBottom: 15, marginTop: -10 }}>
-                  <Text
-                    note
-                    style={{ textAlign: "center", fontSize: 12, color: "red" }}
-                  >
-                    {categoriaError.show && "Ingrese una categoria"}
-                  </Text>
-                </View>
-
-                <View
-                  style={{ width: "95%" }}
-                  //error={error.status}
-                  //floatingLabel>
-                >
-                  <SelectComponent
-                    label="Frecuencia de compra"
-                    onChangeValue={(value) => setFrecuenciCompra(value)}
-                    items={[
-                      { label: "Diario", value: "diario" },
-                      { label: "Semanal", value: "semanal" },
-                      { label: "Mensual", value: "mensual" },
-                    ]}
-                  />
-
-                  <CustomList
-                    query={getCategory}
-                    resolve="categories"
-                    renderIten={(data) => {
-                      const formatData: any = [];
-                      data.forEach((element: any) => {
-                        formatData.push({
-                          label: element.title,
-                          value: element._uid,
-                        });
-                      });
-                      return (
-                        <SelectMultipleComponent
-                          data={formatData}
-                          label="Categoria"
-                          onChangeValue={(data) => setCategories(data)}
-                        />
-                      );
-                    }}
-                  />
-                </View>
-              </View>
-            </View>
-          </View>
-        </ProgressStep>
 
         <ProgressStep
           label="Direccón"
@@ -469,119 +431,6 @@ const RegisterViews: React.SFC<RegisterOtionProps> = (props) => {
                   {directionError.status && (
                     <Icon
                       onPress={() => driection.onChangeText("")}
-                      active
-                      name="close"
-                    />
-                  )}
-                </Item>
-              </View>
-            </View>
-          </View>
-        </ProgressStep>
-        <ProgressStep
-          label="Email"
-          onNext={() =>
-            emailError.status !== null ? emailError.status : false
-          }
-        >
-          <View style={styles.root}>
-            <View style={{ marginTop: marginTop, width: "90%" }}>
-              <View>
-                <Text style={styles.title}>Agrega tu correo electrónico</Text>
-                <Text note style={{ textAlign: "center", marginTop: 10 }}>
-                  Agregar un correo electrónico te ayuda a proteger tu cuenta,
-                  recibir facturas electronicas y mucho más.
-                </Text>
-              </View>
-              <View
-                style={{
-                  marginTop: 15,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View style={{ marginBottom: 15, marginTop: -10 }}>
-                  <Text
-                    style={{ textAlign: "center", color: "red", fontSize: 12 }}
-                  >
-                    {emailError.show &&
-                      "El correo ingresado es invalido, por favor ingrese un correo valido"}
-                  </Text>
-                </View>
-
-                <Item
-                  error={
-                    emailError.status !== null ? !emailError.status : false
-                  }
-                  style={{ width: "95%" }}
-                  floatingLabel
-                >
-                  <Label>Correo electronico</Label>
-                  <Input
-                    {...correo}
-                    keyboardType="email-address"
-                    autoFocus={true}
-                  />
-                  {emailError.status && (
-                    <Icon
-                      onPress={() => correo.onChangeText("")}
-                      active
-                      name="close"
-                    />
-                  )}
-                </Item>
-              </View>
-            </View>
-          </View>
-        </ProgressStep>
-        <ProgressStep
-          label="Celular."
-          onNext={() =>
-            phoneError.status !== null ? phoneError.status : false
-          }
-        >
-          <View style={styles.root}>
-            <View style={{ marginTop: marginTop, width: "90%" }}>
-              <View>
-                <Text style={styles.title}>Ingresa tu número de celular</Text>
-                <Text note style={{ textAlign: "center", marginTop: 10 }}>
-                  Ingresa tu número de celular de contacto. para poder efectuar
-                  una mejor comunicación.
-                </Text>
-              </View>
-
-              <View
-                style={{
-                  marginTop: 20,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View style={{ marginBottom: 15, marginTop: -10 }}>
-                  <Text
-                    note
-                    style={{ textAlign: "center", color: "red", fontSize: 12 }}
-                  >
-                    {phoneError.show && "Ingrese un número de celular válido"}
-                  </Text>
-                </View>
-
-                <Item
-                  style={{ width: "95%" }}
-                  error={
-                    phoneError.status !== null ? !phoneError.status : false
-                  }
-                  floatingLabel
-                >
-                  <Label>Número de celular</Label>
-                  <Input
-                    {...telefono}
-                    keyboardType="phone-pad"
-                    autoFocus={true}
-                  />
-                  {phoneError.status && (
-                    <Icon
-                      onPress={() => telefono.onChangeText(null)}
                       active
                       name="close"
                     />
@@ -675,7 +524,7 @@ const styles = StyleSheet.create({
   },
 
   root: {
-    marginTop: 50,
+    marginTop: 15,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
@@ -689,4 +538,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterViews;
+export default LogisticaViews;

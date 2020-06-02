@@ -231,6 +231,14 @@ const Home: React.SFC<HomeProps> = (props) => {
           />
         </View>
 
+        {/* <Button
+          onPress={() =>
+            navigation.navigate("ConfirmarPedido", { pediodo: [] })
+          }
+        >
+          <Text>pagos</Text>
+        </Button> */}
+
         <View style={{ height: 160, marginTop: -15 }}>
           <CustomList
             query={query}

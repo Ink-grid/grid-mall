@@ -1,18 +1,13 @@
 import * as React from "react";
 import { usePedidoPer } from "../hooks";
-import { View, Text, Button, Icon } from "native-base";
-import {
-  ScrollView,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+import { View, Text, Button, Icon, Spinner } from "native-base";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Layout, Input } from "@ui-kitten/components";
-import {
-  StyleSheet,
-  Keyboard,
-  Platform,
-  KeyboardAvoidingView,
-} from "react-native";
+import { StyleSheet, ToastAndroid } from "react-native";
+import ModalComponent from "../../../../../components/Modal";
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/react-hooks";
+import { StoreContext } from "../../../../../context/StoreContext";
 //import { useFocusEffect } from "@react-navigation/native";
 
 export interface GenerarPedidoProps {}
@@ -28,44 +23,94 @@ const useInputState = (initialValue = "") => {
   return { value, onChangeText: setValue };
 };
 
+const createCotizacion = gql`
+  mutation CreateCotizacion(
+    $client: String
+    $state: Boolean
+    $products: [CotizacionDetail]
+  ) {
+    createCotizacion(
+      input: { client: $client, state: $state, products: $products }
+    )
+  }
+`;
+
 const GenerarPedido: React.SFC<GenerarPedidoProps> = () => {
   const [producto, setProduct] = React.useState<product>();
-  const [isUpItem, setUpItem] = React.useState(false);
+  // const [isModal, setModal] = React.useState(false);
+  const [createAction, { loading }] = useMutation(createCotizacion);
+  const { state } = React.useContext(StoreContext);
   //   const [isPedido, setPedido] = React.useState(true);
-  const { peido, handleDeletesProduct } = usePedidoPer(producto);
+  const { peido, handleDeletesProduct, handleClearProduct } = usePedidoPer(
+    producto
+  );
 
   const inputName = useInputState();
   const inputCantidad = useInputState();
   const unidadMedida = useInputState();
 
-  console.log(isUpItem);
+  const Label = (props: any) => <Text note>{props.label}</Text>;
 
-  //   const _upContainer = () => {
-  //     setUpItem(true);
-  //     //setPedido(false);
-  //   };
-
-  //   const defaultContainer = () => {
-  //     setUpItem(true);
-  //     //setPedido(true);
-  //   };
+  const setCotizacion = async () => {
+    // setModal(true);
+    const data = {
+      client: state.userToken,
+      state: false,
+      products: peido.products,
+    };
+    try {
+      const response = await createAction({ variables: data });
+      if (response) {
+        ToastAndroid.showWithGravity(
+          "Se ingreso con exito su cotización, pronto le enviaremos una respuesta.",
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM
+        );
+        inputName.onChangeText("");
+        inputCantidad.onChangeText("");
+        unidadMedida.onChangeText("");
+        handleClearProduct();
+        // setModal(false);
+      } else {
+        ToastAndroid.showWithGravity(
+          "No se puedo enviar su cotización por favor intentelo mas tarde.",
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      ToastAndroid.showWithGravity(
+        "Ocurrio un error inesperado al enviar su cotización!",
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM
+      );
+    }
+  };
 
   return (
     <View
       style={{ flex: 1, backgroundColor: "#red" }}
       //behavior={Platform.OS === "ios" ? "padding" : "position"}
     >
+      <ModalComponent
+        isVisible={loading}
+        animated="fade"
+        title="Enviando cotización..."
+      >
+        <Spinner></Spinner>
+      </ModalComponent>
       {/* <TouchableWithoutFeedback> */}
       <View style={{ padding: 10, backgroundColor: "#fff", marginTop: -5 }}>
         <Text note style={{ textAlign: "center" }}>
-          Genera tu pedido personalizado
+          Genera tu pedido personalizado y obten una cotización de tu lista de
+          pedido al mejor precio.
         </Text>
       </View>
 
       <Layout style={styles.rowContainer} level="1">
         <Input
-          onFocus={() => setUpItem(true)}
-          label="Nombre:"
+          label={() => <Label label="Nombre:" />}
           style={styles.input}
           placeholder="Manzana"
           {...inputName}
@@ -73,13 +118,13 @@ const GenerarPedido: React.SFC<GenerarPedidoProps> = () => {
 
         <Input
           keyboardType="numeric"
-          label="Cantidad:"
+          label={() => <Label label="Cantidad:" />}
           style={styles.input}
           placeholder="10"
           {...inputCantidad}
         />
         <Input
-          label="Unidad de medida:"
+          label={() => <Label label="Unidad de medida:" />}
           style={styles.input}
           placeholder="Kg"
           {...unidadMedida}
@@ -102,7 +147,7 @@ const GenerarPedido: React.SFC<GenerarPedidoProps> = () => {
               >
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ width: "40%", paddingLeft: 5 }}>
-                    <Text numberOfLines={1}>{ele?.name}</Text>
+                    <Text numberOfLines={1}>- {ele?.name}</Text>
                   </View>
                   <View style={{ width: "25%" }}>
                     <Text>{ele?.quantity}</Text>
@@ -139,10 +184,11 @@ const GenerarPedido: React.SFC<GenerarPedidoProps> = () => {
         </View>
         <View style={{ width: "40%", paddingRight: 5 }}>
           <Button
-            disabled={peido.products.length === 0 ? true : false}
+            disabled={peido.products.length < 5 ? true : loading}
+            onPress={() => setCotizacion()}
             small
             style={[
-              peido.products.length < 5
+              peido.products.length < 5 || loading
                 ? { backgroundColor: "gray" }
                 : { backgroundColor: "#1A751B" },
             ]}
@@ -201,6 +247,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     margin: 2,
+    backgroundColor: "#fff",
   },
   rowContainer: {
     paddingLeft: 5,

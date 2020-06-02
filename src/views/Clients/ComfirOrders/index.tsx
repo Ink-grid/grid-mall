@@ -11,7 +11,6 @@ import {
   Title,
   Body,
   Card,
-  Spinner,
 } from "native-base";
 import {
   StyleSheet,
@@ -22,9 +21,6 @@ import {
 } from "react-native";
 import formatMoney from "../../../utils/utils";
 import ModalComponent from "../../../components/Modal";
-import ComfirDirections from "./Components/ComfirDirection";
-import SavePedido from "./Components/SavePedido";
-import { StoreContext } from "../../../context/StoreContext";
 import GenerateList from "./GenererateList";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Input } from "@ui-kitten/components";
@@ -42,40 +38,37 @@ const useInputState = (initialValue = "1") => {
 const ConfirOrders: React.SFC<ConfirOrdersProps> = (props) => {
   const { navigation, route } = props;
 
-  // [*] get uid for client
-  const { state } = React.useContext(StoreContext);
-
-  const [isModal, setModal] = React.useState(false);
   const [edit, setEdit] = React.useState({
     actived: false,
     quantity: 1,
     sku: "",
   });
-  const [isDireciont, setDirection] = React.useState(false);
-  const [isSavePedido, setPedido] = React.useState(false);
-  const [direction, setdirection] = React.useState<any>({
-    value: null,
-    active: 0,
-  });
+  // const [isDireciont, setDirection] = React.useState(false);
+  const [pedido, setPedidos] = React.useState<any>(null);
+  // const [isSavePedido, setPedido] = React.useState(false);
+  // const [direction, setdirection] = React.useState<any>({
+  // value: null,
+  // active: 0,
+  // });
 
   //console.log(edit);
 
   const quantity = useInputState(edit.quantity.toString());
 
-  const getDay = (): string => {
-    const date = new Date();
-    let weekdays = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    let weekday = weekdays[date.getDay()];
-    return weekday;
-  };
+  // const getDay = (): string => {
+  //   const date = new Date();
+  //   let weekdays = [
+  //     "Sunday",
+  //     "Monday",
+  //     "Tuesday",
+  //     "Wednesday",
+  //     "Thursday",
+  //     "Friday",
+  //     "Saturday",
+  //   ];
+  //   let weekday = weekdays[date.getDay()];
+  //   return weekday;
+  // };
 
   if (!route.params) {
     return null;
@@ -84,23 +77,28 @@ const ConfirOrders: React.SFC<ConfirOrdersProps> = (props) => {
   //console.log(route.params);
   const savePedido = async (data: any) => {
     await AsyncStorage.setItem("pedido", JSON.stringify(data));
+    setPedidos(data);
     // actions(Math.random);
     //return false;
   };
 
-  //[*] get items sku, quantity, price from products
-  const getProductItem = (data: any) => {
-    let newProduct: any = [];
-    data.forEach((element: any) => {
-      newProduct.push({
-        sku: element.sku,
-        quantity: element.quantity,
-        price: element.price,
-      });
-    });
-
-    return newProduct;
+  const removePedido = async () => {
+    await AsyncStorage.removeItem("pedido");
   };
+
+  //[*] get items sku, quantity, price from products
+  // const getProductItem = (data: any) => {
+  //   let newProduct: any = [];
+  //   data.forEach((element: any) => {
+  //     newProduct.push({
+  //       sku: element.sku,
+  //       quantity: element.quantity,
+  //       price: element.price,
+  //     });
+  //   });
+
+  //   return newProduct;
+  // };
 
   return (
     <View style={{ flex: 1, backgroundColor: "#E3E8E5" }}>
@@ -134,118 +132,6 @@ const ConfirOrders: React.SFC<ConfirOrdersProps> = (props) => {
           </Title>
         </Body>
       </Header>
-
-      <ComfirDirections
-        confirm={(state) => state && setPedido(true)}
-        direction={direction}
-        setdirection={setdirection}
-        visibleDirection={isDireciont}
-        close={() => setDirection(false)}
-      />
-
-      <SavePedido
-        order={{
-          client: state.userToken!,
-          direction: direction.value,
-          price_total: route.params.precioTotal,
-          quantity_total: route.params.total,
-          products: getProductItem(
-            route.params.products.filter((e: any) => e.quantity !== 0)
-          ),
-        }}
-        active={isSavePedido}
-        errors={(state, reload) =>
-          state &&
-          Alert.alert(
-            "Error",
-            "Ocurrio un error inesperado. verifique su conexion a internet y vuelva a intentarlo",
-            [
-              {
-                text: "Cancelar",
-                onPress: () => setPedido(false),
-                style: "cancel",
-              },
-              {
-                text: "Volver a intentar",
-                onPress: () => {
-                  reload(Math.random());
-                },
-              },
-            ],
-            { cancelable: true }
-          )
-        }
-        close={() => setPedido(false)}
-      >
-        {(state) => {
-          if (!state) {
-            return (
-              <View style={styles.action}>
-                <Spinner color="#77A765" />
-                <Text note>Gerenerando pedido...</Text>
-              </View>
-            );
-          } else {
-            return (
-              <View style={styles.action}>
-                <Text style={{ padding: 20 }} note>
-                  Se genero con éxito su pedido.
-                </Text>
-                <Button
-                  onPress={() => {
-                    setPedido(false);
-                    navigation.navigate("Screens", {
-                      screen: "Home",
-                    });
-                  }}
-                  style={{ width: "70%", backgroundColor: "#77A765" }}
-                >
-                  <Text style={{ width: "100%", textAlign: "center" }}>
-                    Aceptar
-                  </Text>
-                </Button>
-              </View>
-            );
-          }
-        }}
-      </SavePedido>
-
-      <ModalComponent
-        position="center"
-        animated="fade"
-        transparent={true}
-        header={false}
-        isVisible={isModal}
-      >
-        <View style={{ paddingLeft: 10, paddingRight: 10 }}>
-          <Text style={{ fontWeight: "200" }}>
-            Por el momento no puede realizar ningún pedido. Los únicos dias para
-            realizar sus pedidos son los dias sabados y la entrega de sus
-            productos son los lunes. Gracias por su comprensión.
-          </Text>
-          <View
-            style={{
-              paddingTop: 10,
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "flex-end",
-              alignContent: "flex-end",
-            }}
-          >
-            <Button
-              transparent
-              small
-              style={{ width: 55 }}
-              onPress={() => setModal(false)}
-            >
-              <Text style={{ textAlign: "right", width: "100%" }}>ok</Text>
-            </Button>
-          </View>
-          {/* <Button onPress={() => setModal(false)}>
-						<Text>close</Text>
-					</Button> */}
-        </View>
-      </ModalComponent>
 
       <GenerateList
         data={route.params}
@@ -434,15 +320,16 @@ const ConfirOrders: React.SFC<ConfirOrdersProps> = (props) => {
                   iconRight
                   style={{ backgroundColor: "#77A765", width: "40%" }}
                   onPress={() => {
-                    if (getDay() === "Friday") {
-                      setModal(true);
-                    } else if (precioTotal < 150) {
+                    if (precioTotal < 150) {
                       Alert.alert(
-                        "Error",
+                        "Advertencia",
                         "El preció minimo para la entrega es de PEN 150.00, por favor agrega mas productos a su cesta"
                       );
                     } else {
-                      setDirection(true);
+                      removePedido();
+                      navigation.navigate("ConfirmarPedido", {
+                        pediodo: pedido,
+                      });
                       //etModal(true);
                     }
                   }}

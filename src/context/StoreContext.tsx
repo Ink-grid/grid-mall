@@ -40,7 +40,7 @@ const StoreProvider: React.SFC<StoreProviderProps> = (props) => {
     }
     actions.setUser(JSON.parse(userProfile));
     actions.resToreToken(userToken!);
-    if (accessToken) actions.setAccessToken(accessToken);
+    if (accessToken) actions.setAccessToken(JSON.parse(accessToken));
   };
   // Log new state
   useEffect(() => {

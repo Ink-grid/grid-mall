@@ -104,4 +104,11 @@ const useValidationCard = (
   return { card, expiry, cvc, email };
 };
 
+// const useGetItemVariables = (query: any, variables: any) => {
+//   const { loading, error, data, refetch } = useQuery(query, {
+//     variables: {...variables},
+//   });
+
+// }
+
 export { useInterval, useValidationCard };

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View } from "native-base";
 import useDidUpdate from "../useDidUpdate";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage, ToastAndroid } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 
 type pedido = {
@@ -46,7 +46,11 @@ const ShopingList: React.SFC<ShopingListProps> = (props) => {
       await AsyncStorage.setItem("pedido", JSON.stringify(pedido));
     } catch (error) {
       console.log(error);
-      alert("Ocurrio un error inesperado, por favor vuelva a intentarlo");
+      ToastAndroid.showWithGravity(
+        "Ocurrio un error inesperado, por favor vuelva a intentarlo",
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM
+      );
     }
   };
 
@@ -80,7 +84,11 @@ const ShopingList: React.SFC<ShopingListProps> = (props) => {
     );
 
     if (existeproductinPedido) {
-      alert("El producto ya existe en la lista de pedidos");
+      ToastAndroid.showWithGravity(
+        "El producto ya existe en la lista de pedidos",
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM
+      );
     } else {
       let copyProduct = Object.assign({}, product);
       copyProduct.quantity = 1;

@@ -1,16 +1,17 @@
 import * as React from "react";
-import { View, Button, Icon, Container } from "native-base";
-import RegisterViews from "../../components/views";
+import { Container } from "native-base";
+import HeaderComponent from "../../../components/Header";
+import ProveedorViews from "./ResisterViews";
 import { useFocusEffect } from "@react-navigation/native";
-import { BackHandler, Alert, StyleSheet } from "react-native";
+import { BackHandler, Alert } from "react-native";
 
-export interface RegsiterClientProps {
-  route: any;
+export interface ProveedorProps {
   navigation: any;
+  route: any;
 }
 
-const RegsiterClient: React.SFC<RegsiterClientProps> = (props) => {
-  const { route, navigation } = props;
+const Proveedor: React.SFC<ProveedorProps> = (props) => {
+  const { navigation, route } = props;
 
   const showessage = () => {
     Alert.alert(
@@ -48,32 +49,19 @@ const RegsiterClient: React.SFC<RegsiterClientProps> = (props) => {
     }, [])
   );
 
-  if (!route.params) return null;
-
   return (
-    <Container>
-      <View style={styles.header}>
-        {/* <Text style={{fontWeight: "bold"}}></Text> */}
-        <Button transparent onPress={() => showessage()}>
-          <Icon
-            type="AntDesign"
-            style={{ color: "black", fontSize: 25 }}
-            name="arrowleft"
-          />
-        </Button>
-      </View>
-      <RegisterViews userCLient={route.params.uid} />
+    <Container style={{ backgroundColor: "#fff" }}>
+      <HeaderComponent
+        leftActions={{
+          iconName: "arrowleft",
+          iconType: "AntDesign",
+          actions: () => showessage(),
+        }}
+      />
+
+      <ProveedorViews />
     </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  header: {
-    backgroundColor: "#fff",
-    height: 50,
-    borderBottomColor: "#B8B8B8",
-    borderBottomWidth: 1,
-  },
-});
-
-export default RegsiterClient;
+export default Proveedor;
