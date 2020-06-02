@@ -1,3 +1,5 @@
+import { AsyncStorage } from "react-native";
+
 /** @format */
 enum types {
   SET_USER = "SET_USER",
@@ -24,7 +26,7 @@ let initialState: any = {
   isLoading: true,
   isSignout: false,
   userToken: false,
-  accessToken: false,
+  accessToken: null,
   produts: null,
   reload: false,
 };

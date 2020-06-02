@@ -74,7 +74,7 @@ const Orders: React.SFC<OrdersProps> = (props) => {
           title="Productos:"
           close={() => setProducts({ isActive: false, pedido: null })}
         >
-          <View style={{ padding: 5, height: 400 }}>
+          <View style={{ padding: 5, maxHeight: 400 }}>
             <ScrollView>
               {products.pedido.products
                 .map((product: any, index: number) => (
@@ -204,7 +204,7 @@ const Orders: React.SFC<OrdersProps> = (props) => {
                       })
                     }
                   >
-                    <View style={{ flexDirection: "row", marginTop: 10 }}>
+                    <View style={{ flexDirection: "row" }}>
                       <View style={{ width: "70%" }}>
                         <Text note style={{ fontSize: 10 }}>
                           codigo: {ele._uid}

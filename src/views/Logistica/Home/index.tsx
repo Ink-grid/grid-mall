@@ -1,43 +1,15 @@
-/** @format */
-
 import * as React from "react";
-import { Container, ActionSheet, View, Text, Button, Icon } from "native-base";
+import { Content, ActionSheet, Text, Button, Icon, View } from "native-base";
 import HeaderComponent from "../../../components/Header";
 import Carousel from "../../../components/Carousel";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import CustomList from "../../../components/CustomList";
-import gql from "graphql-tag";
-import Portada from "../../../components/Portada";
-import GenerarPedido from "./component/GenererPedido";
 
-export interface HomeProps {
+export interface HomeProviderProps {
   navigation: any;
 }
 
-type category = {
-  _uid: string;
-  uri: string;
-  title: string;
-  description: string;
-};
-
-const query = gql`
-  {
-    categories {
-      _uid
-      uri
-      title
-      description
-    }
-  }
-`;
-
-const Home: React.SFC<HomeProps> = (props) => {
+const HomeProvider: React.SFC<HomeProviderProps> = (props) => {
   const { navigation } = props;
 
-  //const [isVIsible, setVisible] = React.useState(false);
-
-  //[*] determinamos los botones de nuestro menu
   let butttonOptions = [
     { text: "Perfil", icon: "ios-person" },
     { text: "Privacidad", icon: "ios-lock" },
@@ -67,7 +39,7 @@ const Home: React.SFC<HomeProps> = (props) => {
   };
 
   return (
-    <Container style={{ backgroundColor: "#E9EEE8" }}>
+    <Content>
       <HeaderComponent
         leftActions={{
           iconName: "menu",
@@ -75,7 +47,7 @@ const Home: React.SFC<HomeProps> = (props) => {
           actions: () => navigation.openDrawer(),
         }}
         background="white"
-        title="GridMall"
+        title="GridMall Logistica"
         rightItems={[
           {
             // este icono lo obtengo de esta url -> https://icons.expo.fyi/
@@ -101,7 +73,7 @@ const Home: React.SFC<HomeProps> = (props) => {
           },
         ]}
       />
-      {/* {isVIsible && ( */}
+
       <View style={{ flex: 1 }}>
         <View style={{ padding: 5 }}>
           <Carousel
@@ -230,64 +202,9 @@ const Home: React.SFC<HomeProps> = (props) => {
             ]}
           />
         </View>
-
-        {/* <Button
-          onPress={() =>
-            navigation.navigate("ConfirmarPedido", { pediodo: [] })
-          }
-        >
-          <Text>pagos</Text>
-        </Button> */}
-
-        <View style={{ height: 160, marginTop: -15 }}>
-          <CustomList
-            query={query}
-            resolve="categories"
-            renderIten={(data: [category]) => (
-              <View style={{ padding: 1, paddingTop: 0 }}>
-                <Carousel
-                  style="stats"
-                  title="Categorias"
-                  bulledPosition={{ top: 0, justifyContent: "flex-end" }}
-                  PerInterval={3}
-                  items={data}
-                  renderItem={(data: category) => (
-                    <TouchableOpacity
-                      onPress={() => navigation.jumpTo("ProductsClie", data)}
-                    >
-                      <View
-                        style={{
-                          paddingTop: 10,
-                          width: 120,
-                          //width: '100%'
-                        }}
-                      >
-                        <Portada title={data.title} uri={data.uri} />
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                />
-              </View>
-            )}
-          />
-        </View>
-
-        {/* <View style={{ flex: 1 }}>
-          <Text note style={{ textAlign: "center" }}>
-            Genera tu pedido personalizado
-          </Text>
-
-          <View></View>
-
-          <Button onPress={() => navigation.navigate("Pagos")}>
-            <Text>pagos</Text>
-          </Button>
-        </View> */}
       </View>
-
-      <GenerarPedido></GenerarPedido>
-    </Container>
+    </Content>
   );
 };
 
-export default Home;
+export default HomeProvider;

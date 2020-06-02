@@ -47,6 +47,10 @@ import Logistica from "../views/Register/Logistica";
 import LogisticaRegister from "../views/Register/Logistica/RegisterLogistica";
 import Pedido from "../views/Clients/Pedido";
 import ComfirPagoStripe from "../views/ComfirOrders";
+import Cotizaciones from "../views/Clients/Cotizaciones";
+import HomeProvider from "../views/Logistica/Home";
+import PedidosLogistica from "../views/Logistica/Orders";
+import ProveedoresLogistca from "../views/Logistica/Providers";
 
 //import  home de proveedores, ayuda, perfil, terminos y condiciones
 // import AyudaSoporte from '../views/proveedores/Home/ayudaSoporte';
@@ -156,7 +160,7 @@ const Route: React.SFC<RouteProps> = () => {
           screenOptions={{
             headerShown: false,
           }}
-          initialRouteName="HomeClie"
+          // initialRouteName="HomeClie"
         >
           {/* navigation prooveedore */}
 
@@ -180,19 +184,29 @@ const Route: React.SFC<RouteProps> = () => {
             <Stacks.Screen name="ProfileClie" component={ProfileCliente} />
             <Stacks.Screen name="DashboardClie" component={DashboardClient} />
             <Stacks.Screen name="ConfirmarPedido" component={Pedido} />
+            <Stacks.Screen name="CotizacionClient" component={Cotizaciones} />
+          </>
+        );
+      case "TMEOHyqNQnuZKuVdoLa2":
+        return (
+          <>
+            <Stacks.Screen name="HomeLogistica" component={HomeProvider} />
+            <Stacks.Screen name="OrderLogistica" component={PedidosLogistica} />
+            <Stacks.Screen
+              name="ProviderLogistica"
+              component={ProveedoresLogistca}
+            />
           </>
         );
       default:
         return (
           <>
-            <Stacks.Screen name="Home" component={Home} />
-            <Stacks.Screen name="Products" component={Products} />
+            <Stacks.Screen name="HomeProvider" component={Home} />
+            <Stacks.Screen name="ProductProvider" component={Products} />
             <Stacks.Screen name="Profile" component={Profile} />
-            <Stacks.Screen name="Orders" component={Orders} />
-            <Stacks.Screen name="Clients" component={Clients} />
-            <Stacks.Screen name="Contracts" component={Contracts} />
-            <Stacks.Screen name="Transport" component={Transport} />
-            <Stacks.Screen name="Prueba" component={Prueba} />
+            <Stacks.Screen name="PedidosProviders" component={Orders} />
+            <Stacks.Screen name="InventarioProvider" component={Clients} />
+            <Stacks.Screen name="COntratos" component={Contracts} />
           </>
         );
     }

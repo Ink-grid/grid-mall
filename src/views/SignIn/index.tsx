@@ -68,10 +68,7 @@ const SignIn: React.SFC<SignInProps> = (props) => {
       );
       if (response.user) {
         await AsyncStorage.setItem("user", JSON.stringify(response.user));
-        await AsyncStorage.setItem(
-          "accessToken",
-          JSON.stringify(response.user.displayName)
-        );
+        await AsyncStorage.setItem("accessToken", response.user.displayName!);
         await AsyncStorage.setItem("userToken", response.user.uid);
         setLoading(false);
         actions.signIn(response.user.uid);
