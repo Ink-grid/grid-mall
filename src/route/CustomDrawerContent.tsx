@@ -1,7 +1,7 @@
 /** @format */
 
 import * as React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import { Thumbnail, Text, Icon, Button, Spinner } from "native-base";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { useQuery } from "@apollo/react-hooks";
@@ -15,6 +15,8 @@ export interface CustomDrawerContentProps {
   useruid: string;
   accessToken: string;
 }
+
+const height = Dimensions.get("screen").height;
 
 const CustomDrawerContent: React.SFC<CustomDrawerContentProps> = (props) => {
   const { navigation, query, accessToken, useruid } = props;
@@ -131,6 +133,7 @@ const styles = StyleSheet.create({
   profile: {
     height: 300,
     flex: 0,
+    marginTop: height < 600 ? -60 : 0,
     justifyContent: "flex-end",
     alignItems: "center",
     backgroundColor: "transparent",

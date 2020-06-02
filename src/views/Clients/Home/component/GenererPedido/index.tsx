@@ -1,7 +1,7 @@
 import * as React from "react";
 import { usePedidoPer } from "../hooks";
 import { View, Text, Button, Icon, Spinner } from "native-base";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import { Layout, Input } from "@ui-kitten/components";
 import { StyleSheet, ToastAndroid } from "react-native";
 import ModalComponent from "../../../../../components/Modal";
@@ -49,7 +49,11 @@ const GenerarPedido: React.SFC<GenerarPedidoProps> = () => {
   const inputCantidad = useInputState();
   const unidadMedida = useInputState();
 
-  const Label = (props: any) => <Text note>{props.label}</Text>;
+  const Label = (props: any) => (
+    <Text numberOfLines={1} note>
+      {props.label}
+    </Text>
+  );
 
   const setCotizacion = async () => {
     // setModal(true);
@@ -146,21 +150,44 @@ const GenerarPedido: React.SFC<GenerarPedidoProps> = () => {
                 }}
               >
                 <View style={{ flexDirection: "row" }}>
-                  <View style={{ width: "40%", paddingLeft: 5 }}>
-                    <Text numberOfLines={1}>- {ele?.name}</Text>
+                  <View
+                    style={{
+                      width: "40%",
+                      paddingLeft: 5,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text note numberOfLines={1}>
+                      - {ele?.name}
+                    </Text>
                   </View>
-                  <View style={{ width: "25%" }}>
-                    <Text>{ele?.quantity}</Text>
+                  <View style={{ width: "25%", justifyContent: "center" }}>
+                    <Text note>{ele?.quantity}</Text>
                   </View>
-                  <View style={{ width: "25%" }}>
-                    <Text>{ele?.unidad_medida}</Text>
+                  <View style={{ width: "25%", justifyContent: "center" }}>
+                    <Text numberOfLines={1} note>
+                      {ele?.unidad_medida}
+                    </Text>
                   </View>
-                  <View>
-                    <TouchableOpacity
+                  <View style={{ padding: 3 }}>
+                    <Button
+                      small
                       onPress={() => handleDeletesProduct(index)}
+                      style={{
+                        width: 30,
+                        backgroundColor: "green",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
                     >
-                      <Icon name="delete" type="MaterialIcons"></Icon>
-                    </TouchableOpacity>
+                      <Icon
+                        style={{
+                          position: "absolute",
+                        }}
+                        name="delete"
+                        type="MaterialIcons"
+                      ></Icon>
+                    </Button>
                   </View>
                 </View>
               </View>

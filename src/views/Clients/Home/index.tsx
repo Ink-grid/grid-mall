@@ -9,6 +9,8 @@ import CustomList from "../../../components/CustomList";
 import gql from "graphql-tag";
 import Portada from "../../../components/Portada";
 import GenerarPedido from "./component/GenererPedido";
+import { Dimensions } from "react-native";
+import ModalComponent from "../../../components/Modal";
 
 export interface HomeProps {
   navigation: any;
@@ -32,10 +34,12 @@ const query = gql`
   }
 `;
 
+const height = Dimensions.get("screen").height;
+
 const Home: React.SFC<HomeProps> = (props) => {
   const { navigation } = props;
 
-  //const [isVIsible, setVisible] = React.useState(false);
+  const [isVIsible, setVisible] = React.useState(false);
 
   //[*] determinamos los botones de nuestro menu
   let butttonOptions = [
@@ -271,7 +275,6 @@ const Home: React.SFC<HomeProps> = (props) => {
             )}
           />
         </View>
-
         {/* <View style={{ flex: 1 }}>
           <Text note style={{ textAlign: "center" }}>
             Genera tu pedido personalizado
@@ -284,8 +287,36 @@ const Home: React.SFC<HomeProps> = (props) => {
           </Button>
         </View> */}
       </View>
-
-      <GenerarPedido></GenerarPedido>
+      <ModalComponent
+        title="Lista personalizada"
+        animated="fade"
+        close={() => setVisible(false)}
+        isVisible={isVIsible}
+      >
+        <View style={{ height: 300 }}>
+          <GenerarPedido></GenerarPedido>
+        </View>
+      </ModalComponent>
+      {height > 550 ? (
+        <GenerarPedido></GenerarPedido>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            onPress={() => setVisible(true)}
+            style={{ width: "50%", backgroundColor: "green" }}
+          >
+            <Text style={{ width: "100%", textAlign: "center" }}>
+              Generar lista
+            </Text>
+          </Button>
+        </View>
+      )}
     </Container>
   );
 };
