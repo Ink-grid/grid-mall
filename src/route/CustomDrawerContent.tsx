@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   profile: {
     height: 300,
     flex: 0,
-    marginTop: height < 600 ? -60 : 0,
+    marginTop: height > 700 ? 0 : -60,
     justifyContent: "flex-end",
     alignItems: "center",
     backgroundColor: "transparent",

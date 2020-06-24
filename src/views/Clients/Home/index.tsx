@@ -35,12 +35,14 @@ const query = gql`
 `;
 
 const height = Dimensions.get("screen").height;
+const width = Dimensions.get("screen").width;
 
 const Home: React.SFC<HomeProps> = (props) => {
   const { navigation } = props;
 
   const [isVIsible, setVisible] = React.useState(false);
 
+  alert("height:" + height + "width" + width);
   //[*] determinamos los botones de nuestro menu
   let butttonOptions = [
     { text: "Perfil", icon: "ios-person" },
@@ -294,10 +296,10 @@ const Home: React.SFC<HomeProps> = (props) => {
         isVisible={isVIsible}
       >
         <View style={{ height: 300 }}>
-          <GenerarPedido></GenerarPedido>
+          <GenerarPedido action={() => setVisible(false)}></GenerarPedido>
         </View>
       </ModalComponent>
-      {height > 550 ? (
+      {height > 700 ? (
         <GenerarPedido></GenerarPedido>
       ) : (
         <View

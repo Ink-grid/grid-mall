@@ -10,7 +10,9 @@ import { useMutation } from "@apollo/react-hooks";
 import { StoreContext } from "../../../../../context/StoreContext";
 //import { useFocusEffect } from "@react-navigation/native";
 
-export interface GenerarPedidoProps {}
+export interface GenerarPedidoProps {
+  action?: () => void;
+}
 
 type product = {
   name: string;
@@ -35,7 +37,8 @@ const createCotizacion = gql`
   }
 `;
 
-const GenerarPedido: React.SFC<GenerarPedidoProps> = () => {
+const GenerarPedido: React.SFC<GenerarPedidoProps> = (props) => {
+  const { action } = props;
   const [producto, setProduct] = React.useState<product>();
   // const [isModal, setModal] = React.useState(false);
   const [createAction, { loading }] = useMutation(createCotizacion);
@@ -74,6 +77,7 @@ const GenerarPedido: React.SFC<GenerarPedidoProps> = () => {
         inputCantidad.onChangeText("");
         unidadMedida.onChangeText("");
         handleClearProduct();
+        action && action();
         // setModal(false);
       } else {
         ToastAndroid.showWithGravity(

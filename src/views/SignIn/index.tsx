@@ -19,8 +19,6 @@ import {
   AsyncStorage,
   StatusBar,
   ToastAndroid,
-  ImageBackground,
-  Platform,
   Dimensions,
 } from "react-native";
 
@@ -34,11 +32,6 @@ import {
 
 export interface SignInProps {
   navigation: any;
-}
-
-interface ErrorCode {
-  type: string | null;
-  status: boolean;
 }
 
 const height = Dimensions.get("screen").height;
@@ -174,7 +167,7 @@ const SignIn: React.SFC<SignInProps> = (props) => {
       <View
         style={[
           styles.root,
-          { marginTop: height < 500 ? "5%" : isTransparent ? "20%" : "2%" },
+          { marginTop: height > 700 ? (isTransparent ? "20%" : "10%") : "5%" },
         ]}
       >
         <StatusBar
@@ -242,11 +235,13 @@ const SignIn: React.SFC<SignInProps> = (props) => {
           alignItems: "center",
         }}
       >
-        <Button onPress={() => navigation.navigate("UserOption")} success>
-          <Text style={{ textTransform: "lowercase", zIndex: 0 }}>
-            Crear cuenta de gridmall
-          </Text>
-        </Button>
+        {isTransparent && (
+          <Button onPress={() => navigation.navigate("UserOption")} success>
+            <Text style={{ textTransform: "lowercase", zIndex: 0 }}>
+              Crear cuenta de gridmall
+            </Text>
+          </Button>
+        )}
       </View>
       {isLoading && (
         <View style={styles.spinner}>
